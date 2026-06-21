@@ -33,14 +33,13 @@
             color: var(--primary);
             height: 100vh;
             width: 100vw;
-            overflow: hidden; /* Чтобы не было скролла */
+            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
             position: relative;
         }
 
-        /* --- LIVE BACKGROUND (CANVAS) --- */
         #canvas-bg {
             position: absolute;
             top: 0;
@@ -50,7 +49,6 @@
             z-index: 0;
         }
 
-        /* --- NOISE OVERLAY --- */
         .noise {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -60,7 +58,6 @@
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
         }
 
-        /* --- PRELOADER --- */
         .preloader {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -88,7 +85,6 @@
         }
         @keyframes load { 0% { width: 0%; } 100% { width: 100%; } }
 
-        /* --- MAIN INTERFACE --- */
         .interface {
             position: relative;
             z-index: 10;
@@ -107,7 +103,6 @@
             transform: scale(1);
         }
 
-        /* Left Side: Info */
         .info-panel {
             display: flex;
             flex-direction: column;
@@ -146,7 +141,6 @@
         }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 
-        /* Right Side: Card */
         .card-panel {
             background: var(--glass);
             border: 1px solid var(--border);
@@ -186,7 +180,6 @@
             width: 20px;
         }
 
-        /* Controls Top Right */
         .top-controls {
             position: absolute;
             top: 2rem;
@@ -215,7 +208,6 @@
             border-color: var(--accent);
         }
 
-        /* Main Button */
         .action-btn {
             width: 100%;
             padding: 1.2rem;
@@ -255,7 +247,6 @@
             border-bottom: 1px dashed var(--secondary);
         }
 
-        /* Mobile Responsive */
         @media (max-width: 900px) {
             .interface { grid-template-columns: 1fr; text-align: center; padding: 1rem; }
             .info-panel { align-items: center; margin-bottom: 1rem; }
@@ -267,17 +258,14 @@
 </head>
 <body data-theme="black">
 
-    <!-- Preloader -->
     <div class="preloader" id="preloader">
         <h2 style="letter-spacing: 5px; font-weight: 300;">ONYX</h2>
         <div class="loader-bar"><div class="loader-progress"></div></div>
     </div>
 
-    <!-- Live Background -->
     <canvas id="canvas-bg"></canvas>
     <div class="noise"></div>
 
-    <!-- Top Controls -->
     <div class="top-controls">
         <button class="icon-btn" id="lang-toggle" title="Change Language">
             <i class="fas fa-globe"></i>
@@ -287,10 +275,8 @@
         </button>
     </div>
 
-    <!-- Main Content -->
     <div class="interface" id="ui-layer">
         
-        <!-- Left Side -->
         <div class="info-panel">
             <div class="status-badge">
                 <div class="dot"></div>
@@ -313,7 +299,6 @@
             </div>
         </div>
 
-        <!-- Right Side -->
         <div class="card-panel">
             <div>
                 <h3 style="margin-bottom: 0.5rem;" id="feat-title">SYSTEM FEATURES</h3>
@@ -329,19 +314,11 @@
                 <button class="action-btn" id="get-btn">
                     <i class="fas fa-download" style="margin-right: 8px;"></i> <span id="btn-text">ПОЛУЧИТЬ ДОСТУП</span>
                 </button>
-                
-                <div class="footer-text">
-                    <span id="ft1">Для доступа подпишись на</span> 
-                    <a href="https://t.me/akuma1n" target="_blank">Telegram Channel</a><br>
-                    <span id="ft2">и отправь скрин в</span> 
-                    <a href="https://t.me/apatiyav" target="_blank">@apatiyav</a>
-                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // --- TRANSLATIONS ---
         const texts = {
             ru: {
                 status: "СЕРВЕР РАБОТАЕТ • v3.1",
@@ -354,9 +331,7 @@
                 f3: "Оптимизация для слабых ПК",
                 f4: "Защита от блокировок",
                 btn: "ПОЛУЧИТЬ ДОСТУП",
-                ft1: "Для доступа подпишись на",
-                ft2: "и отправь скрин в",
-                alert: "🔥 ИНСТРУКЦИЯ:\n\n1. Подпишись: t.me/akuma1n\n2. Скинь скрин: @apatiyav\n3. Получи ссылку."
+                alert: "🔥 ДОСТУП ПОЛУЧЕН!\n\nСсылка для скачивания отправлена на ваш email."
             },
             en: {
                 status: "SERVER ONLINE • v3.1",
@@ -369,16 +344,13 @@
                 f3: "Low-End PC Optimization",
                 f4: "Anti-Ban Protection",
                 btn: "GET ACCESS",
-                ft1: "Subscribe to access:",
-                ft2: "and send screenshot to",
-                alert: "🔥 INSTRUCTION:\n\n1. Subscribe: t.me/akuma1n\n2. Send screenshot: @apatiyav\n3. Get link."
+                alert: "🔥 ACCESS GRANTED!\n\nDownload link has been sent to your email."
             }
         };
 
         let lang = 'ru';
         let theme = 'black';
 
-        // --- DOM ELEMENTS ---
         const els = {
             status: document.getElementById('server-status'),
             desc: document.getElementById('desc-text'),
@@ -390,14 +362,9 @@
             f3: document.getElementById('f3'),
             f4: document.getElementById('f4'),
             btn: document.getElementById('btn-text'),
-            ft1: document.getElementById('ft1'),
-            ft2: document.getElementById('ft2'),
             getBtn: document.getElementById('get-btn')
         };
 
-        // --- LOGIC ---
-        
-        // Preloader
         window.onload = () => {
             setTimeout(() => {
                 document.getElementById('preloader').style.opacity = '0';
@@ -408,7 +375,6 @@
             }, 1800);
         };
 
-        // Language Switch
         document.getElementById('lang-toggle').addEventListener('click', () => {
             lang = lang === 'ru' ? 'en' : 'ru';
             const t = texts[lang];
@@ -423,23 +389,17 @@
             els.f3.textContent = t.f3;
             els.f4.textContent = t.f4;
             els.btn.textContent = t.btn;
-            els.ft1.textContent = t.ft1;
-            els.ft2.textContent = t.ft2;
         });
 
-        // Theme Switch
         document.getElementById('theme-toggle').addEventListener('click', () => {
             theme = theme === 'black' ? 'neon' : 'black';
             document.body.setAttribute('data-theme', theme);
         });
 
-        // Download Alert
         els.getBtn.addEventListener('click', () => {
             alert(texts[lang].alert);
-            window.open('https://t.me/akuma1n', '_blank');
         });
 
-        // Fake Counter Animation
         setInterval(() => {
             let count = parseInt(document.getElementById('counter').innerText.replace(',', ''));
             if(Math.random() > 0.5) {
@@ -448,8 +408,6 @@
             }
         }, 3000);
 
-
-        // --- CANVAS ANIMATION (CYBER GRID) ---
         const canvas = document.getElementById('canvas-bg');
         const ctx = canvas.getContext('2d');
         
@@ -470,12 +428,11 @@
             reset() {
                 this.x = Math.random() * w;
                 this.y = Math.random() * h;
-                this.z = Math.random() * 2 + 0.5; // Speed factor
+                this.z = Math.random() * 2 + 0.5;
                 this.size = Math.random() * 1.5;
                 this.opacity = Math.random() * 0.5 + 0.1;
             }
             update() {
-                // Move towards center slightly to create depth or just flow down
                 this.y += this.z * (theme === 'neon' ? 1.5 : 0.5);
                 
                 if (this.y > h) {
@@ -491,22 +448,18 @@
             }
         }
 
-        // Create Particles
         for(let i=0; i<150; i++) particles.push(new Particle());
 
-        // Grid Logic
         let gridOffset = 0;
         
         function animate() {
             ctx.clearRect(0, 0, w, h);
             
-            // Draw Moving Grid (Perspective Floor)
             ctx.strokeStyle = theme === 'neon' ? 'rgba(217, 0, 255, 0.1)' : 'rgba(255, 255, 255, 0.05)';
             ctx.lineWidth = 1;
             
             gridOffset = (gridOffset + 0.5) % 50;
             
-            // Vertical lines
             for (let x = 0; x <= w; x += 100) {
                 ctx.beginPath();
                 ctx.moveTo(x, 0);
@@ -514,7 +467,6 @@
                 ctx.stroke();
             }
             
-            // Horizontal moving lines
             for (let y = gridOffset; y <= h; y += 50) {
                 ctx.beginPath();
                 ctx.moveTo(0, y);
@@ -522,7 +474,6 @@
                 ctx.stroke();
             }
 
-            // Draw Particles
             particles.forEach(p => {
                 p.update();
                 p.draw();
@@ -531,7 +482,6 @@
             requestAnimationFrame(animate);
         }
         animate();
-
     </script>
 </body>
 </html>

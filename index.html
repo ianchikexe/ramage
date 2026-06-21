@@ -3,64 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ONIX // SYSTEM</title>
+    <title>ONYX // SYSTEM</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #050505;
+            --bg-color: #000000;
             --primary: #ffffff;
-            --secondary: #888888;
+            --secondary: #444444;
             --accent: #ffffff;
-            --glass-bg: rgba(20, 20, 20, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --glow: 0 0 40px rgba(255, 255, 255, 0.05);
+            --glass: rgba(10, 10, 10, 0.6);
+            --border: rgba(255, 255, 255, 0.1);
+            --glow: 0 0 20px rgba(255, 255, 255, 0.1);
         }
 
         [data-theme="neon"] {
-            --bg-color: #020005;
-            --primary: #f0f0f0;
-            --secondary: #7a7a9a;
-            --accent: #b000ff;
-            --glass-bg: rgba(15, 0, 30, 0.75);
-            --glass-border: rgba(176, 0, 255, 0.2);
-            --glow: 0 0 50px rgba(176, 0, 255, 0.15);
+            --bg-color: #05000a;
+            --primary: #e0e0e0;
+            --secondary: #6a6a8a;
+            --accent: #d900ff;
+            --glass: rgba(10, 0, 20, 0.7);
+            --border: rgba(217, 0, 255, 0.3);
+            --glow: 0 0 30px rgba(217, 0, 255, 0.3);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
         
         body {
             background-color: var(--bg-color);
             color: var(--primary);
             height: 100vh;
             width: 100vw;
-            overflow: hidden;
+            overflow: hidden; /* Чтобы не было скролла */
             display: flex;
             justify-content: center;
             align-items: center;
             position: relative;
         }
 
-        /* --- BACKGROUND EFFECTS --- */
+        /* --- LIVE BACKGROUND (CANVAS) --- */
         #canvas-bg {
             position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             z-index: 0;
-            opacity: 0.6;
         }
 
-        .ambient-light {
-            position: absolute;
-            width: 600px; height: 600px;
-            background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
-            opacity: 0.08;
-            filter: blur(80px);
-            z-index: 1;
+        /* --- NOISE OVERLAY --- */
+        .noise {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none;
-            transition: 1s ease;
+            z-index: 1;
+            opacity: 0.05;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
         }
-        .light-top { top: -200px; left: -100px; }
-        .light-bottom { bottom: -200px; right: -100px; }
 
         /* --- PRELOADER --- */
         .preloader {
@@ -74,8 +72,9 @@
             align-items: center;
             transition: opacity 0.8s ease;
         }
-        .loader-line {
-            width: 150px; height: 2px;
+        .loader-bar {
+            width: 200px;
+            height: 2px;
             background: #222;
             margin-top: 20px;
             position: relative;
@@ -85,7 +84,7 @@
             position: absolute;
             top: 0; left: 0; height: 100%; width: 0%;
             background: var(--accent);
-            animation: load 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            animation: load 2s ease-in-out forwards;
         }
         @keyframes load { 0% { width: 0%; } 100% { width: 100%; } }
 
@@ -94,156 +93,100 @@
             position: relative;
             z-index: 10;
             width: 100%;
-            max-width: 1000px;
+            max-width: 900px;
             padding: 2rem;
             display: grid;
-            grid-template-columns: 1.2fr 0.8fr;
-            gap: 4rem;
-            align-items: center;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
             opacity: 0;
-            transform: translateY(20px);
-            transition: all 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+            transform: scale(0.95);
+            transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
         .interface.visible {
             opacity: 1;
-            transform: translateY(0);
+            transform: scale(1);
         }
 
-        /* Left Side */
-        .info-panel h1 {
-            font-size: 6rem;
-            font-weight: 800;
-            line-height: 1;
-            letter-spacing: -3px;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        /* Left Side: Info */
+        .info-panel {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        .big-title {
+            font-size: 5rem;
+            font-weight: 900;
+            line-height: 0.9;
+            letter-spacing: -2px;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-        
-        .subtitle {
-            font-size: 1.2rem;
-            color: var(--secondary);
-            margin-bottom: 3rem;
-            font-weight: 300;
-            max-width: 450px;
-            line-height: 1.6;
-        }
-
-        .stats-row {
-            display: flex;
-            gap: 3rem;
-            border-top: 1px solid var(--glass-border);
-            padding-top: 2rem;
-        }
-        .stat-item h3 {
-            font-size: 2.5rem;
-            font-weight: 500;
-            color: var(--primary);
-            margin-bottom: 0.2rem;
-        }
-        .stat-item span {
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.05);
+            padding: 8px 16px;
+            border-radius: 50px;
+            border: 1px solid var(--border);
             font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--secondary);
+            margin-bottom: 2rem;
+            backdrop-filter: blur(5px);
         }
+        .dot {
+            width: 8px; height: 8px;
+            background: #00ff88;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #00ff88;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 
         /* Right Side: Card */
         .card-panel {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 30px;
-            padding: 3rem;
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            box-shadow: 0 30px 60px rgba(0,0,0,0.5), var(--glow);
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             position: relative;
             overflow: hidden;
-            transition: transform 0.3s ease;
         }
-        .card-panel:hover {
-            transform: translateY(-5px);
-            border-color: rgba(255,255,255,0.15);
-        }
-
-        .price-tag {
-            font-size: 3rem;
-            font-weight: 800;
-            color: var(--accent);
-            margin-bottom: 0.5rem;
-            display: block;
-        }
-        .price-sub {
-            font-size: 0.9rem;
-            color: var(--secondary);
-            margin-bottom: 2rem;
-            display: block;
+        .card-panel::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, var(--glow) 0%, transparent 60%);
+            opacity: 0.5;
+            pointer-events: none;
         }
 
         .features-list {
             list-style: none;
-            margin-bottom: 2.5rem;
+            margin: 2rem 0;
         }
         .features-list li {
             display: flex;
             align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
-            color: var(--primary);
-            font-size: 1rem;
-            font-weight: 300;
+            gap: 12px;
+            margin-bottom: 12px;
+            color: var(--secondary);
+            font-size: 0.95rem;
         }
         .features-list li i {
             color: var(--accent);
-            font-size: 0.9rem;
-            background: rgba(255,255,255,0.05);
-            width: 30px; height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
+            width: 20px;
         }
 
-        /* Button */
-        .action-btn {
-            width: 100%;
-            padding: 1.2rem;
-            background: var(--primary);
-            color: #000;
-            border: none;
-            border-radius: 16px;
-            font-weight: 800;
-            font-size: 1.1rem;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-        }
-        .action-btn:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 30px rgba(255,255,255,0.3);
-        }
-        [data-theme="neon"] .action-btn {
-            background: var(--accent);
-            color: #fff;
-            box-shadow: 0 0 25px rgba(176, 0, 255, 0.4);
-        }
-        [data-theme="neon"] .action-btn:hover {
-            box-shadow: 0 0 40px rgba(176, 0, 255, 0.6);
-        }
-
-        /* Top Controls */
+        /* Controls Top Right */
         .top-controls {
             position: absolute;
             top: 2rem;
@@ -253,11 +196,11 @@
             z-index: 20;
         }
         .icon-btn {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid var(--glass-border);
-            color: var(--secondary);
-            width: 40px; height: 40px;
-            border-radius: 12px;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid var(--border);
+            color: var(--primary);
+            width: 45px; height: 45px;
+            border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -266,18 +209,58 @@
             backdrop-filter: blur(5px);
         }
         .icon-btn:hover {
+            background: var(--accent);
+            color: #000;
+            box-shadow: 0 0 20px var(--accent);
+            border-color: var(--accent);
+        }
+
+        /* Main Button */
+        .action-btn {
+            width: 100%;
+            padding: 1.2rem;
             background: var(--primary);
             color: #000;
-            transform: rotate(15deg);
+            border: none;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 1.1rem;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255,255,255,0.2);
+        }
+        [data-theme="neon"] .action-btn {
+            background: var(--accent);
+            color: #fff;
+            box-shadow: 0 0 20px rgba(217, 0, 255, 0.4);
+        }
+
+        .footer-text {
+            margin-top: 1.5rem;
+            font-size: 0.75rem;
+            color: var(--secondary);
+            text-align: center;
+            line-height: 1.4;
+        }
+        .footer-text a {
+            color: var(--primary);
+            text-decoration: none;
+            border-bottom: 1px dashed var(--secondary);
         }
 
         /* Mobile Responsive */
-        @media (max-width: 950px) {
-            .interface { grid-template-columns: 1fr; text-align: center; gap: 2rem; padding: 1.5rem; }
-            .info-panel { align-items: center; }
-            .info-panel h1 { font-size: 4rem; }
-            .stats-row { justify-content: center; }
-            .card-panel { padding: 2rem; }
+        @media (max-width: 900px) {
+            .interface { grid-template-columns: 1fr; text-align: center; padding: 1rem; }
+            .info-panel { align-items: center; margin-bottom: 1rem; }
+            .big-title { font-size: 3.5rem; }
+            .card-panel { padding: 1.5rem; }
             .top-controls { top: 1rem; right: 1rem; }
         }
     </style>
@@ -286,22 +269,21 @@
 
     <!-- Preloader -->
     <div class="preloader" id="preloader">
-        <h2 style="letter-spacing: 8px; font-weight: 800;">ONIX</h2>
-        <div class="loader-line"><div class="loader-progress"></div></div>
+        <h2 style="letter-spacing: 5px; font-weight: 300;">ONYX</h2>
+        <div class="loader-bar"><div class="loader-progress"></div></div>
     </div>
 
-    <!-- Background -->
+    <!-- Live Background -->
     <canvas id="canvas-bg"></canvas>
-    <div class="ambient-light light-top"></div>
-    <div class="ambient-light light-bottom"></div>
+    <div class="noise"></div>
 
     <!-- Top Controls -->
     <div class="top-controls">
-        <button class="icon-btn" id="lang-toggle" title="Language">
+        <button class="icon-btn" id="lang-toggle" title="Change Language">
             <i class="fas fa-globe"></i>
         </button>
-        <button class="icon-btn" id="theme-toggle" title="Theme">
-            <i class="fas fa-bolt"></i>
+        <button class="icon-btn" id="theme-toggle" title="Switch Theme">
+            <i class="fas fa-adjust"></i>
         </button>
     </div>
 
@@ -310,19 +292,23 @@
         
         <!-- Left Side -->
         <div class="info-panel">
-            <h1>ONIX<br>SYSTEM</h1>
-            <p class="subtitle" id="desc-text">
-                Абсолютное превосходство в эмуляции. Стабильность, скорость и полная незаметность для античита.
+            <div class="status-badge">
+                <div class="dot"></div>
+                <span id="server-status">SERVER ONLINE • v3.1</span>
+            </div>
+            <h1 class="big-title">ONYX</h1>
+            <p style="color: var(--secondary); max-width: 400px; line-height: 1.6;" id="desc-text">
+                Максимальная производительность эмулятора. Оптимизированное ядро для стабильных 60 FPS на любом железе.
             </p>
             
-            <div class="stats-row">
-                <div class="stat-item">
-                    <h3>550₽</h3>
-                    <span id="label-price">ЦЕНА</span>
+            <div style="margin-top: 2rem; display: flex; gap: 2rem;">
+                <div>
+                    <h3 style="font-size: 2rem; color: var(--accent);" id="counter">14,203</h3>
+                    <span style="font-size: 0.8rem; color: var(--secondary);" id="label-downloads">DOWNLOADS</span>
                 </div>
-                <div class="stat-item">
-                    <h3>60</h3>
-                    <span id="label-fps">FPS LOCK</span>
+                <div>
+                    <h3 style="font-size: 2rem; color: var(--accent);">0ms</h3>
+                    <span style="font-size: 0.8rem; color: var(--secondary);" id="label-lag">INPUT LAG</span>
                 </div>
             </div>
         </div>
@@ -330,64 +316,87 @@
         <!-- Right Side -->
         <div class="card-panel">
             <div>
-                <span class="price-tag">550₽</span>
-                <span class="price-sub" id="price-sub">Полный доступ навсегда</span>
-                
+                <h3 style="margin-bottom: 0.5rem;" id="feat-title">SYSTEM FEATURES</h3>
                 <ul class="features-list">
-                    <li><i class="fas fa-check"></i> <span id="f1">Стабильные 60 FPS</span></li>
-                    <li><i class="fas fa-mouse-pointer"></i> <span id="f2">Raw Mouse Input</span></li>
-                    <li><i class="fas fa-shield-alt"></i> <span id="f3">Undetected защита</span></li>
-                    <li><i class="fas fa-rocket"></i> <span id="f4">Оптимизация ядра</span></li>
+                    <li><i class="fas fa-microchip"></i> <span id="f1">Auto-FPS Lock (Stable 60)</span></li>
+                    <li><i class="fas fa-crosshairs"></i> <span id="f2">Raw Mouse Input (No Acceleration)</span></li>
+                    <li><i class="fas fa-wind"></i> <span id="f3">Low-End PC Optimization</span></li>
+                    <li><i class="fas fa-shield-alt"></i> <span id="f4">Anti-Ban Protection</span></li>
                 </ul>
             </div>
 
-            <button class="action-btn" id="get-btn">
-                <i class="fab fa-telegram-plane"></i> <span id="btn-text">КУПИТЬ В ЛС</span>
-            </button>
+            <div>
+                <button class="action-btn" id="get-btn">
+                    <i class="fas fa-download" style="margin-right: 8px;"></i> <span id="btn-text">ПОЛУЧИТЬ ДОСТУП</span>
+                </button>
+                
+                <div class="footer-text">
+                    <span id="ft1">Для доступа подпишись на</span> 
+                    <a href="https://t.me/akuma1n" target="_blank">Telegram Channel</a><br>
+                    <span id="ft2">и отправь скрин в</span> 
+                    <a href="https://t.me/apatiyav" target="_blank">@apatiyav</a>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
+        // --- TRANSLATIONS ---
         const texts = {
             ru: {
-                desc: "Абсолютное превосходство в эмуляции. Стабильность, скорость и полная незаметность для античита.",
-                priceLabel: "ЦЕНА",
-                fpsLabel: "FPS LOCK",
-                priceSub: "Полный доступ навсегда",
-                f1: "Стабильные 60 FPS",
-                f2: "Чистый ввод мыши",
-                f3: "Undetected защита",
-                f4: "Оптимизация ядра",
-                btn: "КУПИТЬ В ЛС"
+                status: "СЕРВЕР РАБОТАЕТ • v3.1",
+                desc: "Максимальная производительность эмулятора. Оптимизированное ядро для стабильных 60 FPS на любом железе.",
+                downloads: "СКАЧИВАНИЙ",
+                lag: "ЗАДЕРЖКА",
+                featTitle: "ФИЧИ СИСТЕМЫ",
+                f1: "Авто-лок ФПС (Стабильные 60)",
+                f2: "Чистый ввод мыши (Без акселерации)",
+                f3: "Оптимизация для слабых ПК",
+                f4: "Защита от блокировок",
+                btn: "ПОЛУЧИТЬ ДОСТУП",
+                ft1: "Для доступа подпишись на",
+                ft2: "и отправь скрин в",
+                alert: "🔥 ИНСТРУКЦИЯ:\n\n1. Подпишись: t.me/akuma1n\n2. Скинь скрин: @apatiyav\n3. Получи ссылку."
             },
             en: {
-                desc: "Absolute dominance in emulation. Stability, speed and complete invisibility to anti-cheat.",
-                priceLabel: "PRICE",
-                fpsLabel: "FPS LOCK",
-                priceSub: "Lifetime access",
-                f1: "Stable 60 FPS",
-                f2: "Raw Mouse Input",
-                f3: "Undetected protection",
-                f4: "Core optimization",
-                btn: "BUY IN DM"
+                status: "SERVER ONLINE • v3.1",
+                desc: "Maximum emulator performance. Optimized core for stable 60 FPS on any hardware.",
+                downloads: "DOWNLOADS",
+                lag: "INPUT LAG",
+                featTitle: "SYSTEM FEATURES",
+                f1: "Auto-FPS Lock (Stable 60)",
+                f2: "Raw Mouse Input (No Accel)",
+                f3: "Low-End PC Optimization",
+                f4: "Anti-Ban Protection",
+                btn: "GET ACCESS",
+                ft1: "Subscribe to access:",
+                ft2: "and send screenshot to",
+                alert: "🔥 INSTRUCTION:\n\n1. Subscribe: t.me/akuma1n\n2. Send screenshot: @apatiyav\n3. Get link."
             }
         };
 
         let lang = 'ru';
         let theme = 'black';
 
+        // --- DOM ELEMENTS ---
         const els = {
+            status: document.getElementById('server-status'),
             desc: document.getElementById('desc-text'),
-            lPrice: document.getElementById('label-price'),
-            lFps: document.getElementById('label-fps'),
-            pSub: document.getElementById('price-sub'),
+            dlLabel: document.getElementById('label-downloads'),
+            lagLabel: document.getElementById('label-lag'),
+            featTitle: document.getElementById('feat-title'),
             f1: document.getElementById('f1'),
             f2: document.getElementById('f2'),
             f3: document.getElementById('f3'),
             f4: document.getElementById('f4'),
-            btn: document.getElementById('btn-text')
+            btn: document.getElementById('btn-text'),
+            ft1: document.getElementById('ft1'),
+            ft2: document.getElementById('ft2'),
+            getBtn: document.getElementById('get-btn')
         };
 
+        // --- LOGIC ---
+        
         // Preloader
         window.onload = () => {
             setTimeout(() => {
@@ -395,23 +404,27 @@
                 setTimeout(() => {
                     document.getElementById('preloader').style.display = 'none';
                     document.getElementById('ui-layer').classList.add('visible');
-                }, 500);
-            }, 1500);
+                }, 800);
+            }, 1800);
         };
 
         // Language Switch
         document.getElementById('lang-toggle').addEventListener('click', () => {
             lang = lang === 'ru' ? 'en' : 'ru';
             const t = texts[lang];
+            
+            els.status.textContent = t.status;
             els.desc.textContent = t.desc;
-            els.lPrice.textContent = t.priceLabel;
-            els.lFps.textContent = t.fpsLabel;
-            els.pSub.textContent = t.priceSub;
+            els.dlLabel.textContent = t.downloads;
+            els.lagLabel.textContent = t.lag;
+            els.featTitle.textContent = t.featTitle;
             els.f1.textContent = t.f1;
             els.f2.textContent = t.f2;
             els.f3.textContent = t.f3;
             els.f4.textContent = t.f4;
             els.btn.textContent = t.btn;
+            els.ft1.textContent = t.ft1;
+            els.ft2.textContent = t.ft2;
         });
 
         // Theme Switch
@@ -420,17 +433,29 @@
             document.body.setAttribute('data-theme', theme);
         });
 
-        // DIRECT LINK TO TELEGRAM
-        document.getElementById('get-btn').addEventListener('click', () => {
-            window.location.href = "https://t.me/apatiyav";
+        // Download Alert
+        els.getBtn.addEventListener('click', () => {
+            alert(texts[lang].alert);
+            window.open('https://t.me/akuma1n', '_blank');
         });
 
-        // --- CANVAS ANIMATION ---
+        // Fake Counter Animation
+        setInterval(() => {
+            let count = parseInt(document.getElementById('counter').innerText.replace(',', ''));
+            if(Math.random() > 0.5) {
+                count++;
+                document.getElementById('counter').innerText = count.toLocaleString();
+            }
+        }, 3000);
+
+
+        // --- CANVAS ANIMATION (CYBER GRID) ---
         const canvas = document.getElementById('canvas-bg');
         const ctx = canvas.getContext('2d');
+        
         let w, h;
         let particles = [];
-
+        
         function resize() {
             w = canvas.width = window.innerWidth;
             h = canvas.height = window.innerHeight;
@@ -445,48 +470,68 @@
             reset() {
                 this.x = Math.random() * w;
                 this.y = Math.random() * h;
-                this.size = Math.random() * 2;
-                this.speedY = Math.random() * 0.5 + 0.2;
-                this.opacity = Math.random() * 0.5;
+                this.z = Math.random() * 2 + 0.5; // Speed factor
+                this.size = Math.random() * 1.5;
+                this.opacity = Math.random() * 0.5 + 0.1;
             }
             update() {
-                this.y -= this.speedY;
-                if (this.y < 0) {
-                    this.y = h;
+                // Move towards center slightly to create depth or just flow down
+                this.y += this.z * (theme === 'neon' ? 1.5 : 0.5);
+                
+                if (this.y > h) {
+                    this.y = 0;
                     this.x = Math.random() * w;
                 }
             }
             draw() {
-                ctx.fillStyle = theme === 'neon' ? `rgba(176, 0, 255, ${this.opacity})` : `rgba(255, 255, 255, ${this.opacity})`;
+                ctx.fillStyle = theme === 'neon' ? `rgba(217, 0, 255, ${this.opacity})` : `rgba(255, 255, 255, ${this.opacity})`;
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
                 ctx.fill();
             }
         }
 
-        for(let i=0; i<100; i++) particles.push(new Particle());
+        // Create Particles
+        for(let i=0; i<150; i++) particles.push(new Particle());
 
+        // Grid Logic
+        let gridOffset = 0;
+        
         function animate() {
             ctx.clearRect(0, 0, w, h);
             
-            // Draw subtle grid
-            ctx.strokeStyle = theme === 'neon' ? 'rgba(176, 0, 255, 0.05)' : 'rgba(255, 255, 255, 0.03)';
+            // Draw Moving Grid (Perspective Floor)
+            ctx.strokeStyle = theme === 'neon' ? 'rgba(217, 0, 255, 0.1)' : 'rgba(255, 255, 255, 0.05)';
             ctx.lineWidth = 1;
             
-            const gridSize = 80;
-            const offset = (Date.now() / 50) % gridSize;
-
-            for (let x = 0; x <= w; x += gridSize) {
-                ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+            gridOffset = (gridOffset + 0.5) % 50;
+            
+            // Vertical lines
+            for (let x = 0; x <= w; x += 100) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, h);
+                ctx.stroke();
             }
-            for (let y = offset; y <= h; y += gridSize) {
-                ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+            
+            // Horizontal moving lines
+            for (let y = gridOffset; y <= h; y += 50) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(w, y);
+                ctx.stroke();
             }
 
-            particles.forEach(p => { p.update(); p.draw(); });
+            // Draw Particles
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+
             requestAnimationFrame(animate);
         }
         animate();
+
     </script>
 </body>
 </html>

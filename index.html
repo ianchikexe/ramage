@@ -14,6 +14,7 @@
             --glass: rgba(10, 10, 10, 0.6);
             --border: rgba(255, 255, 255, 0.1);
             --glow: 0 0 20px rgba(255, 255, 255, 0.1);
+            --support-color: #00d4ff;
         }
 
         [data-theme="neon"] {
@@ -24,6 +25,7 @@
             --glass: rgba(10, 0, 20, 0.7);
             --border: rgba(217, 0, 255, 0.3);
             --glow: 0 0 30px rgba(217, 0, 255, 0.3);
+            --support-color: #ff6bff;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
@@ -233,6 +235,7 @@
         .price-tag .currency {
             font-size: 1.2rem;
             color: var(--secondary);
+            min-width: 40px;
         }
 
         .action-btn {
@@ -289,6 +292,33 @@
             color: #fff;
         }
 
+        .support-btn {
+            width: 100%;
+            padding: 0.7rem;
+            background: transparent;
+            color: var(--support-color);
+            border: 1px solid var(--support-color);
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .support-btn:hover {
+            background: var(--support-color);
+            color: #000;
+            box-shadow: 0 0 20px var(--support-color);
+        }
+        [data-theme="neon"] .support-btn:hover {
+            background: var(--support-color);
+            color: #fff;
+        }
+
         @media (max-width: 900px) {
             .interface { grid-template-columns: 1fr; text-align: center; padding: 1rem; }
             .info-panel { align-items: center; margin-bottom: 1rem; }
@@ -298,6 +328,7 @@
             .price-tag .price { font-size: 1.5rem; }
             .features-list li { font-size: 0.8rem; }
             .emulator-btn { font-size: 0.8rem; }
+            .support-btn { font-size: 0.75rem; }
         }
     </style>
 </head>
@@ -317,6 +348,9 @@
         </button>
         <button class="icon-btn" id="theme-toggle" title="Switch Theme">
             <i class="fas fa-adjust"></i>
+        </button>
+        <button class="icon-btn" id="currency-toggle" title="Change Currency">
+            <i class="fas fa-dollar-sign"></i>
         </button>
     </div>
 
@@ -354,9 +388,9 @@
 
             <div>
                 <div class="price-tag" id="price-tag">
-                    <span class="currency">₽</span>
+                    <span class="currency" id="currency-symbol">₽</span>
                     <span class="price" id="price-display">550</span>
-                    <span class="currency">RUB</span>
+                    <span class="currency" id="currency-code">RUB</span>
                 </div>
                 
                 <button class="action-btn" id="get-btn">
@@ -366,6 +400,10 @@
 
                 <button class="emulator-btn" id="emulator-btn">
                     <i class="fas fa-gamepad"></i> <span id="emulator-text">БЕСПЛАТНЫЙ ЭМУЛЯТОР RAMPAGE</span>
+                </button>
+
+                <button class="support-btn" id="support-btn">
+                    <i class="fas fa-headset"></i> <span id="support-text">ПОДДЕРЖКА</span>
                 </button>
             </div>
         </div>
@@ -378,21 +416,31 @@
                 desc: "ONYX — лучший эмулятор для ПК с передовыми технологиями и максимальной производительностью.",
                 featTitle: "ОСОБЕННОСТИ",
                 btn: "КУПИТЬ ДОСТУП",
-                price: "550",
-                emulator: "БЕСПЛАТНЫЙ ЭМУЛЯТОР RAMPAGE"
+                emulator: "БЕСПЛАТНЫЙ ЭМУЛЯТОР RAMPAGE",
+                support: "ПОДДЕРЖКА",
+                price: "550"
             },
             en: {
                 status: "ONYX • v3.1",
                 desc: "ONYX — the best PC emulator with advanced technologies and maximum performance.",
                 featTitle: "FEATURES",
                 btn: "BUY ACCESS",
-                price: "550",
-                emulator: "FREE EMULATOR RAMPAGE"
+                emulator: "FREE EMULATOR RAMPAGE",
+                support: "SUPPORT",
+                price: "550"
             }
+        };
+
+        const currencies = {
+            RUB: { symbol: "₽", code: "RUB", rate: 1 },
+            USD: { symbol: "$", code: "USD", rate: 0.011 },
+            EUR: { symbol: "€", code: "EUR", rate: 0.010 }
         };
 
         let lang = 'ru';
         let theme = 'black';
+        let currentCurrency = 'RUB';
+        const basePrice = 550;
 
         const els = {
             status: document.getElementById('server-status'),
@@ -400,10 +448,21 @@
             featTitle: document.getElementById('feat-title'),
             btn: document.getElementById('btn-text'),
             price: document.getElementById('price-display'),
+            currencySymbol: document.getElementById('currency-symbol'),
+            currencyCode: document.getElementById('currency-code'),
             getBtn: document.getElementById('get-btn'),
             priceTag: document.getElementById('price-tag'),
-            emulatorText: document.getElementById('emulator-text')
+            emulatorText: document.getElementById('emulator-text'),
+            supportText: document.getElementById('support-text')
         };
+
+        function updatePrice() {
+            const currency = currencies[currentCurrency];
+            const convertedPrice = Math.round(basePrice * currency.rate);
+            els.price.textContent = convertedPrice;
+            els.currencySymbol.textContent = currency.symbol;
+            els.currencyCode.textContent = currency.code;
+        }
 
         window.onload = () => {
             setTimeout(() => {
@@ -413,6 +472,7 @@
                     document.getElementById('ui-layer').classList.add('visible');
                 }, 800);
             }, 1800);
+            updatePrice();
         };
 
         document.getElementById('lang-toggle').addEventListener('click', () => {
@@ -423,13 +483,21 @@
             els.desc.textContent = t.desc;
             els.featTitle.textContent = t.featTitle;
             els.btn.textContent = t.btn;
-            els.price.textContent = t.price;
             els.emulatorText.textContent = t.emulator;
+            els.supportText.textContent = t.support;
         });
 
         document.getElementById('theme-toggle').addEventListener('click', () => {
             theme = theme === 'black' ? 'neon' : 'black';
             document.body.setAttribute('data-theme', theme);
+        });
+
+        document.getElementById('currency-toggle').addEventListener('click', () => {
+            const keys = Object.keys(currencies);
+            const currentIndex = keys.indexOf(currentCurrency);
+            const nextIndex = (currentIndex + 1) % keys.length;
+            currentCurrency = keys[nextIndex];
+            updatePrice();
         });
 
         // Кнопка "КУПИТЬ ДОСТУП" → onyxsellbot
@@ -445,6 +513,11 @@
         // Кнопка "БЕСПЛАТНЫЙ ЭМУЛЯТОР RAMPAGE" → remagebot
         document.getElementById('emulator-btn').addEventListener('click', () => {
             window.open('https://t.me/remagebot', '_blank');
+        });
+
+        // Кнопка "ПОДДЕРЖКА" → apatiyav
+        document.getElementById('support-btn').addEventListener('click', () => {
+            window.open('https://t.me/apatiyav', '_blank');
         });
 
         const canvas = document.getElementById('canvas-bg');

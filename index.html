@@ -1,1 +1,645 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ONYX // SYSTEM</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #000000;
+            --primary: #ffffff;
+            --secondary: #888888;
+            --accent: #ffffff;
+            --glass: rgba(10, 10, 10, 0.6);
+            --border: rgba(255, 255, 255, 0.1);
+            --glow: 0 0 20px rgba(255, 255, 255, 0.1);
+            --support-color: #00d4ff;
+        }
 
+        [data-theme="neon"] {
+            --bg-color: #05000a;
+            --primary: #e0e0e0;
+            --secondary: #a080b0;
+            --accent: #d900ff;
+            --glass: rgba(10, 0, 20, 0.7);
+            --border: rgba(217, 0, 255, 0.3);
+            --glow: 0 0 30px rgba(217, 0, 255, 0.3);
+            --support-color: #ff6bff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--primary);
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        #canvas-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .noise {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.05;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        .preloader {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.8s ease;
+        }
+        .loader-bar {
+            width: 200px;
+            height: 2px;
+            background: #222;
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .loader-progress {
+            position: absolute;
+            top: 0; left: 0;
+            height: 100%;
+            width: 0%;
+            background: var(--accent);
+            animation: load 2s ease-in-out forwards;
+        }
+        @keyframes load {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+
+        .interface {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 900px;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .interface.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .info-panel {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        .big-title {
+            font-size: 5rem;
+            font-weight: 900;
+            line-height: 0.9;
+            letter-spacing: -2px;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.05);
+            padding: 8px 16px;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+            font-size: 0.8rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(5px);
+        }
+        .dot {
+            width: 8px; height: 8px;
+            background: #00ff88;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #00ff88;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .card-panel {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+        .card-panel::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--glow) 0%, transparent 60%);
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .features-list {
+            list-style: none;
+            margin: 1.5rem 0;
+        }
+        .features-list li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+            color: var(--secondary);
+            font-size: 0.9rem;
+        }
+        .features-list li i {
+            color: var(--accent);
+            width: 20px;
+        }
+
+        .top-controls {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            display: flex;
+            gap: 1rem;
+            z-index: 20;
+        }
+        .icon-btn {
+            background: rgba(0,0,0,0.5);
+            border: 1px solid var(--border);
+            color: var(--primary);
+            width: 45px; height: 45px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: 0.3s;
+            backdrop-filter: blur(5px);
+        }
+        .icon-btn:hover {
+            background: var(--accent);
+            color: #000;
+            box-shadow: 0 0 20px var(--accent);
+            border-color: var(--accent);
+        }
+        [data-theme="neon"] .icon-btn:hover {
+            color: #fff;
+        }
+
+        .price-tag {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 1rem;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .price-tag:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--accent);
+        }
+        .price-tag .price {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--accent);
+        }
+        .price-tag .currency {
+            font-size: 1.2rem;
+            color: var(--secondary);
+            min-width: 40px;
+        }
+
+        .action-btn {
+            width: 100%;
+            padding: 1.2rem;
+            background: var(--primary);
+            color: #000;
+            border: none;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 1.1rem;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255,255,255,0.2);
+        }
+        [data-theme="neon"] .action-btn {
+            background: var(--accent);
+            color: #fff;
+            box-shadow: 0 0 20px rgba(217, 0, 255, 0.4);
+        }
+
+        .emulator-btn {
+            width: 100%;
+            padding: 0.8rem;
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            letter-spacing: 0.5px;
+        }
+        .emulator-btn:hover {
+            background: var(--accent);
+            color: #000;
+            border-color: var(--accent);
+        }
+        [data-theme="neon"] .emulator-btn:hover {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .support-btn {
+            width: 100%;
+            padding: 0.7rem;
+            background: transparent;
+            color: var(--support-color);
+            border: 1px solid var(--support-color);
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .support-btn:hover {
+            background: var(--support-color);
+            color: #000;
+            box-shadow: 0 0 20px var(--support-color);
+        }
+        [data-theme="neon"] .support-btn:hover {
+            background: var(--support-color);
+            color: #fff;
+        }
+
+        @media (max-width: 900px) {
+            .interface {
+                grid-template-columns: 1fr;
+                text-align: center;
+                padding: 1rem;
+            }
+            .info-panel {
+                align-items: center;
+                margin-bottom: 1rem;
+            }
+            .big-title {
+                font-size: 3.5rem;
+            }
+            .card-panel {
+                padding: 1.5rem;
+            }
+            .top-controls {
+                top: 1rem;
+                right: 1rem;
+            }
+            .price-tag .price {
+                font-size: 1.5rem;
+            }
+            .features-list li {
+                font-size: 0.8rem;
+            }
+            .emulator-btn {
+                font-size: 0.8rem;
+            }
+            .support-btn {
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body data-theme="black">
+
+    <div class="preloader" id="preloader">
+        <h2 style="letter-spacing: 5px; font-weight: 300;">ONYX</h2>
+        <div class="loader-bar"><div class="loader-progress"></div></div>
+    </div>
+
+    <canvas id="canvas-bg"></canvas>
+    <div class="noise"></div>
+
+    <div class="top-controls">
+        <button class="icon-btn" id="lang-toggle" title="Change Language">
+            <i class="fas fa-globe"></i>
+        </button>
+        <button class="icon-btn" id="theme-toggle" title="Switch Theme">
+            <i class="fas fa-adjust"></i>
+        </button>
+        <button class="icon-btn" id="currency-toggle" title="Change Currency">
+            <i class="fas fa-dollar-sign"></i>
+        </button>
+    </div>
+
+    <div class="interface" id="ui-layer">
+        
+        <div class="info-panel">
+            <div class="status-badge">
+                <div class="dot"></div>
+                <span id="server-status">ONYX • v3.1</span>
+            </div>
+            <h1 class="big-title">ONYX</h1>
+            <p style="color: var(--secondary); max-width: 400px; line-height: 1.6;" id="desc-text">
+                ONYX — лучший эмулятор для ПК с передовыми технологиями и максимальной производительностью.
+            </p>
+        </div>
+
+        <div class="card-panel">
+            <div>
+                <h3 style="margin-bottom: 0.5rem;" id="feat-title">ОСОБЕННОСТИ</h3>
+                <ul class="features-list" id="features-list">
+                    <li><i class="fas fa-palette"></i> <span>Кастомный дизайн.</span></li>
+                    <li><i class="fas fa-cogs"></i> <span>Оптимизация конфигов.</span></li>
+                    <li><i class="fas fa-rocket"></i> <span>Анлок фпса по бинду.</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span>Вылетов полностью нету.</span></li>
+                    <li><i class="fas fa-crosshairs"></i> <span>Добавлен прицел (настраиваемый).</span></li>
+                    <li><i class="fas fa-microchip"></i> <span>Улучшен движок и андроид.</span></li>
+                    <li><i class="fas fa-discord"></i> <span>Discord RPC.</span></li>
+                    <li><i class="fas fa-keyboard"></i> <span>Настраиваемые бинды.</span></li>
+                    <li><i class="fas fa-ban"></i> <span>Вырезана реклама полностью.</span></li>
+                    <li><i class="fas fa-download"></i> <span>Удобный автоустановщик.</span></li>
+                    <li><i class="fas fa-shield-alt"></i> <span>Нету синих экранов на Windows 11.</span></li>
+                    <li><i class="fas fa-vk"></i> <span>Можно спокойно входить через ВК.</span></li>
+                </ul>
+            </div>
+
+            <div>
+                <div class="price-tag" id="price-tag">
+                    <span class="currency" id="currency-symbol">₽</span>
+                    <span class="price" id="price-display">550</span>
+                    <span class="currency" id="currency-code">RUB</span>
+                </div>
+                
+                <button class="action-btn" id="get-btn">
+                    <i class="fas fa-shopping-cart" style="margin-right: 8px;"></i> 
+                    <span id="btn-text">КУПИТЬ ДОСТУП</span>
+                </button>
+
+                <button class="emulator-btn" id="emulator-btn">
+                    <i class="fas fa-gamepad"></i> <span id="emulator-text">БЕСПЛАТНЫЙ ЭМУЛЯТОР RAMPAGE</span>
+                </button>
+
+                <button class="support-btn" id="support-btn">
+                    <i class="fas fa-headset"></i> <span id="support-text">ПОДДЕРЖКА</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const texts = {
+            ru: {
+                status: "ONYX • v3.1",
+                desc: "ONYX — лучший эмулятор для ПК с передовыми технологиями и максимальной производительностью.",
+                featTitle: "ОСОБЕННОСТИ",
+                btn: "КУПИТЬ ДОСТУП",
+                emulator: "БЕСПЛАТНЫЙ ЭМУЛЯТОР RAMPAGE",
+                support: "ПОДДЕРЖКА",
+                price: "550"
+            },
+            en: {
+                status: "ONYX • v3.1",
+                desc: "ONYX — the best PC emulator with advanced technologies and maximum performance.",
+                featTitle: "FEATURES",
+                btn: "BUY ACCESS",
+                emulator: "FREE EMULATOR RAMPAGE",
+                support: "SUPPORT",
+                price: "550"
+            }
+        };
+
+        const currencies = {
+            RUB: { symbol: "₽", code: "RUB", rate: 1 },
+            USD: { symbol: "$", code: "USD", rate: 0.011 },
+            EUR: { symbol: "€", code: "EUR", rate: 0.010 }
+        };
+
+        let lang = 'ru';
+        let theme = 'black';
+        let currentCurrency = 'RUB';
+        const basePrice = 550;
+
+        const els = {
+            status: document.getElementById('server-status'),
+            desc: document.getElementById('desc-text'),
+            featTitle: document.getElementById('feat-title'),
+            btn: document.getElementById('btn-text'),
+            price: document.getElementById('price-display'),
+            currencySymbol: document.getElementById('currency-symbol'),
+            currencyCode: document.getElementById('currency-code'),
+            getBtn: document.getElementById('get-btn'),
+            priceTag: document.getElementById('price-tag'),
+            emulatorText: document.getElementById('emulator-text'),
+            supportText: document.getElementById('support-text')
+        };
+
+        function updatePrice() {
+            const currency = currencies[currentCurrency];
+            const convertedPrice = Math.round(basePrice * currency.rate);
+            els.price.textContent = convertedPrice;
+            els.currencySymbol.textContent = currency.symbol;
+            els.currencyCode.textContent = currency.code;
+        }
+
+        window.onload = () => {
+            setTimeout(() => {
+                document.getElementById('preloader').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('preloader').style.display = 'none';
+                    document.getElementById('ui-layer').classList.add('visible');
+                }, 800);
+            }, 1800);
+            updatePrice();
+        };
+
+        document.getElementById('lang-toggle').addEventListener('click', () => {
+            lang = lang === 'ru' ? 'en' : 'ru';
+            const t = texts[lang];
+            
+            els.status.textContent = t.status;
+            els.desc.textContent = t.desc;
+            els.featTitle.textContent = t.featTitle;
+            els.btn.textContent = t.btn;
+            els.emulatorText.textContent = t.emulator;
+            els.supportText.textContent = t.support;
+        });
+
+        document.getElementById('theme-toggle').addEventListener('click', () => {
+            theme = theme === 'black' ? 'neon' : 'black';
+            document.body.setAttribute('data-theme', theme);
+        });
+
+        document.getElementById('currency-toggle').addEventListener('click', () => {
+            const keys = Object.keys(currencies);
+            const currentIndex = keys.indexOf(currentCurrency);
+            const nextIndex = (currentIndex + 1) % keys.length;
+            currentCurrency = keys[nextIndex];
+            updatePrice();
+        });
+
+        // Кнопка "КУПИТЬ ДОСТУП" → onyxsellbot
+        els.getBtn.addEventListener('click', () => {
+            window.open('https://t.me/onyxsellbot', '_blank');
+        });
+
+        // Клик по цене → onyxsellbot
+        els.priceTag.addEventListener('click', () => {
+            window.open('https://t.me/onyxsellbot', '_blank');
+        });
+
+        // Кнопка "БЕСПЛАТНЫЙ ЭМУЛЯТОР RAMPAGE" → remagebot
+        document.getElementById('emulator-btn').addEventListener('click', () => {
+            window.open('https://t.me/remagebot', '_blank');
+        });
+
+        // Кнопка "ПОДДЕРЖКА" → apatiyav
+        document.getElementById('support-btn').addEventListener('click', () => {
+            window.open('https://t.me/apatiyav', '_blank');
+        });
+
+        // ===== Canvas Background =====
+        const canvas = document.getElementById('canvas-bg');
+        const ctx = canvas.getContext('2d');
+        
+        let w, h;
+        let particles = [];
+        
+        function resize() {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * w;
+                this.y = Math.random() * h;
+                this.z = Math.random() * 2 + 0.5;
+                this.size = Math.random() * 1.5;
+                this.opacity = Math.random() * 0.5 + 0.1;
+            }
+            update() {
+                this.y += this.z * (theme === 'neon' ? 1.5 : 0.5);
+                if (this.y > h) {
+                    this.y = 0;
+                    this.x = Math.random() * w;
+                }
+            }
+            draw() {
+                ctx.fillStyle = theme === 'neon' ? `rgba(217, 0, 255, ${this.opacity})` : `rgba(255, 255, 255, ${this.opacity})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        for(let i=0; i<150; i++) particles.push(new Particle());
+
+        let gridOffset = 0;
+        
+        function animate() {
+            ctx.clearRect(0, 0, w, h);
+            
+            ctx.strokeStyle = theme === 'neon' ? 'rgba(217, 0, 255, 0.1)' : 'rgba(255, 255, 255, 0.05)';
+            ctx.lineWidth = 1;
+            
+            gridOffset = (gridOffset + 0.5) % 50;
+            
+            for (let x = 0; x <= w; x += 100) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, h);
+                ctx.stroke();
+            }
+            
+            for (let y = gridOffset; y <= h; y += 50) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(w, y);
+                ctx.stroke();
+            }
+
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+</body>
+</html>

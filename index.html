@@ -20,7 +20,8 @@
             --success: #00ff88;
             --warning: #ffaa00;
             --danger: #ff3355;
-            --chat-bg: rgba(10, 10, 10, 0.8);
+            --chat-bg: rgba(10, 10, 10, 0.85);
+            --question-bg: rgba(255,255,255,0.05);
         }
 
         [data-theme="neon"] {
@@ -34,6 +35,7 @@
             --support-color: #ff6bff;
             --shadow: 0 20px 50px rgba(217, 0, 255, 0.2);
             --chat-bg: rgba(10, 0, 20, 0.85);
+            --question-bg: rgba(217, 0, 255, 0.1);
         }
 
         * {
@@ -310,8 +312,8 @@
             bottom: 6rem;
             right: 2rem;
             z-index: 50;
-            width: 400px;
-            height: 500px;
+            width: 420px;
+            height: 550px;
             background: var(--chat-bg);
             border: 1px solid var(--border);
             border-radius: 20px;
@@ -343,6 +345,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            flex-shrink: 0;
         }
         .chat-header-info {
             display: flex;
@@ -409,12 +412,13 @@
         }
 
         .message {
-            max-width: 80%;
+            max-width: 85%;
             padding: 0.7rem 1rem;
             border-radius: 12px;
             font-size: 0.85rem;
             line-height: 1.5;
             animation: messageIn 0.3s ease;
+            word-wrap: break-word;
         }
         @keyframes messageIn {
             from {
@@ -445,17 +449,57 @@
             font-size: 0.65rem;
             color: var(--support-color);
             font-weight: 700;
-            margin-bottom: 0.2rem;
+            margin-bottom: 0.3rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .message.bot .bot-name i {
+            font-size: 0.5rem;
+            color: var(--success);
+        }
+
+        .message.bot ul {
+            margin: 0.5rem 0 0.5rem 1rem;
+            padding: 0;
+        }
+        .message.bot ul li {
+            margin-bottom: 0.3rem;
+            color: var(--secondary);
+            list-style: none;
+            position: relative;
+            padding-left: 1.2rem;
+        }
+        .message.bot ul li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+        }
+        .message.bot a {
+            color: var(--support-color);
+            text-decoration: none;
+            border-bottom: 1px dashed var(--support-color);
+            transition: 0.3s;
+            word-break: break-all;
+        }
+        .message.bot a:hover {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
         }
 
         .chat-input-area {
-            padding: 1rem 1.5rem;
+            padding: 0.8rem 1.5rem;
             border-top: 1px solid var(--border);
             display: flex;
             gap: 0.5rem;
+            flex-shrink: 0;
+            flex-wrap: wrap;
         }
         .chat-input {
             flex: 1;
+            min-width: 150px;
             padding: 0.7rem 1rem;
             background: rgba(0,0,0,0.3);
             border: 1px solid var(--border);
@@ -485,6 +529,32 @@
         .chat-send:hover {
             transform: scale(1.05);
             box-shadow: 0 0 20px var(--glow);
+        }
+
+        .quick-questions {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.5rem 1.5rem 0.8rem 1.5rem;
+            flex-wrap: wrap;
+            border-top: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+        .quick-q {
+            padding: 0.3rem 0.8rem;
+            background: var(--question-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            font-size: 0.7rem;
+            color: var(--secondary);
+            cursor: pointer;
+            transition: 0.3s;
+            white-space: nowrap;
+        }
+        .quick-q:hover {
+            border-color: var(--accent);
+            color: var(--primary);
+            transform: scale(1.05);
+            background: rgba(255,255,255,0.05);
         }
 
         .typing-indicator {
@@ -833,10 +903,10 @@
                 display: none;
             }
             .chat-window {
-                width: 90%;
-                right: 5%;
+                width: 95%;
+                right: 2.5%;
                 bottom: 5rem;
-                height: 400px;
+                height: 450px;
             }
             .chat-toggle {
                 bottom: 1.5rem;
@@ -844,6 +914,20 @@
                 width: 55px;
                 height: 55px;
                 font-size: 1.5rem;
+            }
+            .quick-questions {
+                padding: 0.3rem 1rem 0.5rem 1rem;
+            }
+            .quick-q {
+                font-size: 0.6rem;
+                padding: 0.2rem 0.6rem;
+            }
+            .chat-input-area {
+                padding: 0.5rem 1rem;
+            }
+            .chat-input {
+                min-width: 100px;
+                font-size: 0.8rem;
             }
         }
     </style>
@@ -894,8 +978,8 @@
         </div>
         <div class="chat-messages" id="chatMessages">
             <div class="message bot">
-                <div class="bot-name">⚡ ONYX GPT</div>
-                Привет! Я ONYX GPT — твой помощник по эмулятору. Задавай любые вопросы о настройке, оптимизации или функциях ONYX! 🚀
+                <div class="bot-name">⚡ ONYX GPT <i class="fas fa-circle"></i></div>
+                Привет! Я ONYX GPT — твой помощник по эмулятору. Задавай вопросы или выбери один из готовых вопросов ниже! 🚀
             </div>
         </div>
         <div class="typing-indicator" id="typingIndicator">
@@ -904,6 +988,12 @@
                 <span></span>
                 <span></span>
             </div>
+        </div>
+        <div class="quick-questions" id="quickQuestions">
+            <button class="quick-q" data-question="функции">📋 Функции ONYX</button>
+            <button class="quick-q" data-question="hyper-v">🛑 Отключение Hyper-V</button>
+            <button class="quick-q" data-question="bluestacks">🗑️ Удалить Bluestacks</button>
+            <button class="quick-q" data-question="virus">🔒 Проверка на вирусы</button>
         </div>
         <div class="chat-input-area">
             <input type="text" class="chat-input" id="chatInput" placeholder="Спроси что-нибудь...">
@@ -1044,32 +1134,18 @@
         const chatInput = document.getElementById('chatInput');
         const chatSend = document.getElementById('chatSend');
         const typingIndicator = document.getElementById('typingIndicator');
+        const quickQuestions = document.getElementById('quickQuestions');
 
-        // ONYX GPT Knowledge Base
+        // ===== ONYX GPT KNOWLEDGE BASE =====
         const knowledgeBase = {
-            'настройка': 'Для настройки ONYX откройте меню "Настройки" (F1). Там вы можете настроить графику, управление, бинды и многое другое!',
-            'оптимизация': 'Для максимальной производительности рекомендуем: включить аппаратное ускорение, отключить вертикальную синхронизацию, установить приоритет процесса "Высокий" в диспетчере задач.',
-            'фпс': 'Чтобы разблокировать FPS, нажмите комбинацию Ctrl+Shift+F. Также можно настроить лимит FPS в настройках игры (раздел "Графика").',
-            'bind': 'Настраиваемые бинды доступны в разделе "Управление". Вы можете назначить любые клавиши для действий в эмуляторе.',
-            'discord': 'Discord RPC (Rich Presence) автоматически отображает статус "Играет в ONYX" в Discord. Для отключения зайдите в настройки эмулятора.',
-            'вылет': 'ONYX стабилен и не имеет вылетов. Если возникла проблема, проверьте целостность файлов или обновите драйверы видеокарты.',
-            'прицел': 'Встроенный прицел можно включить/выключить клавишей P. Настройки прицела (цвет, размер, форма) доступны в меню "Интерфейс".',
-            'автоустановщик': 'Автоустановщик ONYX автоматически скачивает и устанавливает все необходимые компоненты. Запустите файл Setup.exe как администратор.',
-            'виндовс 11': 'ONYX полностью совместим с Windows 11. Все проблемы с "синими экранами" исправлены в последних обновлениях.',
-            'вк': 'Для входа через ВК нажмите кнопку "Войти через ВК" на экране авторизации. Система автоматически подтянет ваш профиль.',
-            'реклама': 'В ONYX полностью вырезана вся реклама. Наслаждайтесь чистым игровым процессом без отвлекающих элементов!',
-            'движок': 'ONYX использует собственный улучшенный движок на базе Android 13, что обеспечивает максимальную совместимость и производительность.',
-            'вылетов': 'ONYX — стабильный эмулятор. Вылеты полностью отсутствуют благодаря оптимизированному коду и регулярным обновлениям.',
-            'помощь': 'Чем могу помочь? Спрашивай про настройку, оптимизацию, бинды, FPS или любые другие функции ONYX!',
+            'функции': `📋 <b>Функции ONYX:</b><br><br>• 🎨 Кастомный дизайн.<br>• ⚙️ Оптимизация конфигов.<br>• 🚀 Анлок фпса по бинду.<br>• ✅ Вылетов полностью нету.<br>• 🎯 Добавлен прицел (настраиваемый).<br>• 💻 Улучшен движок и андроид.<br>• 💬 Discord RPC.<br>• ⌨️ Настраиваемые бинды.<br>• 🚫 Вырезана реклама полностью.<br>• 📥 Удобный автоустановщик.<br>• 🛡️ Нету синих экранов на Windows 11.<br>• 🔑 Можно спокойно входить через ВК.`,
+            
+            'hyper-v': `🛑 <b>Отключение Hyper-V:</b><br><br>Для отключения Hyper-V следуйте инструкции:<br><br>1️⃣ Откройте "Панель управления" → "Программы и компоненты" → "Включение или отключение компонентов Windows"<br>2️⃣ Снимите галочку с "Hyper-V"<br>3️⃣ Нажмите "OK" и перезагрузите компьютер<br><br>📎 <b>Подробная инструкция:</b><br><a href="https://t.me/c/3921368867/5" target="_blank">🔗 Нажмите для подробной инструкции</a>`,
+            
+            'bluestacks': `🗑️ <b>Как удалить старый Bluestacks:</b><br><br>1️⃣ Откройте "Панель управления" → "Программы и компоненты"<br>2️⃣ Найдите "BlueStacks" в списке<br>3️⃣ Нажмите "Удалить" и следуйте инструкциям<br>4️⃣ После удаления перезагрузите компьютер<br><br>📎 <b>Подробная инструкция:</b><br><a href="https://t.me/c/3921368867/7" target="_blank">🔗 Нажмите для подробной инструкции</a>`,
+            
+            'virus': `🔒 <b>Как проверить эмулятор на вирусы:</b><br><br>Для проверки ONYX на вирусы используйте VirusTotal:<br><br>1️⃣ Перейдите на сайт VirusTotal<br>2️⃣ Нажмите "Выбрать файл"<br>3️⃣ Выберите файл эмулятора<br>4️⃣ Дождитесь завершения проверки<br><br>📎 <b>Ссылка для проверки:</b><br><a href="https://www.virustotal.com/gui/home/upload" target="_blank">🔗 VirusTotal - Проверка файлов</a><br><br>✅ ONYX полностью безопасен и не содержит вирусов!`
         };
-
-        const defaultResponses = [
-            'Хороший вопрос! Вот что я знаю по этой теме... 🤔',
-            'Интересно! Давай разберемся вместе. 🔍',
-            'Отличный запрос! Я помогу тебе с этим. 💪',
-            'Знаю ответ! Сейчас расскажу. ✨',
-            'О, это важный момент! Слушай внимательно. 🎯',
-        ];
 
         function getBotResponse(input) {
             const lowerInput = input.toLowerCase();
@@ -1078,14 +1154,14 @@
                     return response;
                 }
             }
-            return defaultResponses[Math.floor(Math.random() * defaultResponses.length)] + ' \n\nПодробнее можешь спросить в поддержке или почитать документацию.';
+            return '❓ Я не совсем понял вопрос. Пожалуйста, уточни или выбери один из готовых вопросов ниже.';
         }
 
         function addMessage(text, type) {
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${type}`;
             if (type === 'bot') {
-                messageDiv.innerHTML = `<div class="bot-name">⚡ ONYX GPT</div>${text}`;
+                messageDiv.innerHTML = `<div class="bot-name">⚡ ONYX GPT <i class="fas fa-circle"></i></div>${text}`;
             } else {
                 messageDiv.textContent = text;
             }
@@ -1093,9 +1169,8 @@
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
-        function sendMessage() {
-            const text = chatInput.value.trim();
-            if (!text) return;
+        function sendMessage(text) {
+            if (!text || text.trim() === '') return;
 
             addMessage(text, 'user');
             chatInput.value = '';
@@ -1107,9 +1182,10 @@
                 typingIndicator.classList.remove('active');
                 const response = getBotResponse(text);
                 addMessage(response, 'bot');
-            }, 800 + Math.random() * 600);
+            }, 600 + Math.random() * 400);
         }
 
+        // ===== CHAT EVENTS =====
         chatToggle.addEventListener('click', () => {
             chatWindow.classList.toggle('active');
             if (chatWindow.classList.contains('active')) {
@@ -1121,9 +1197,34 @@
             chatWindow.classList.remove('active');
         });
 
-        chatSend.addEventListener('click', sendMessage);
+        chatSend.addEventListener('click', () => {
+            sendMessage(chatInput.value);
+        });
+
         chatInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') sendMessage();
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                sendMessage(chatInput.value);
+            }
+        });
+
+        // ===== QUICK QUESTIONS =====
+        quickQuestions.addEventListener('click', (e) => {
+            const target = e.target.closest('.quick-q');
+            if (target) {
+                const question = target.dataset.question;
+                const text = target.textContent.trim();
+                addMessage(text, 'user');
+                
+                typingIndicator.classList.add('active');
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+
+                setTimeout(() => {
+                    typingIndicator.classList.remove('active');
+                    const response = getBotResponse(question);
+                    addMessage(response, 'bot');
+                }, 600 + Math.random() * 400);
+            }
         });
 
         // ===== PRELOADER =====

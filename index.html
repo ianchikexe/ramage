@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ONYX // SYSTEM</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -15,6 +16,11 @@
             --border: rgba(255, 255, 255, 0.1);
             --glow: 0 0 20px rgba(255, 255, 255, 0.1);
             --support-color: #00d4ff;
+            --shadow: 0 20px 50px rgba(0,0,0,0.5);
+            --success: #00ff88;
+            --warning: #ffaa00;
+            --danger: #ff3355;
+            --chat-bg: rgba(10, 10, 10, 0.8);
         }
 
         [data-theme="neon"] {
@@ -26,6 +32,8 @@
             --border: rgba(217, 0, 255, 0.3);
             --glow: 0 0 30px rgba(217, 0, 255, 0.3);
             --support-color: #ff6bff;
+            --shadow: 0 20px 50px rgba(217, 0, 255, 0.2);
+            --chat-bg: rgba(10, 0, 20, 0.85);
         }
 
         * {
@@ -63,10 +71,78 @@
             height: 100%;
             pointer-events: none;
             z-index: 1;
-            opacity: 0.05;
+            opacity: 0.03;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
         }
 
+        /* ===== 3D LIVE WALLPAPER ===== */
+        .glow-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.4;
+            animation: orbFloat 20s ease-in-out infinite;
+        }
+        .glow-orb:nth-child(1) {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(100, 200, 255, 0.5), transparent);
+            top: -150px;
+            left: -150px;
+            animation-delay: 0s;
+        }
+        .glow-orb:nth-child(2) {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(217, 0, 255, 0.4), transparent);
+            bottom: -200px;
+            right: -200px;
+            animation-delay: -7s;
+        }
+        .glow-orb:nth-child(3) {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(0, 255, 136, 0.3), transparent);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: -14s;
+        }
+        .glow-orb:nth-child(4) {
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(255, 170, 0, 0.25), transparent);
+            top: 20%;
+            right: 10%;
+            animation-delay: -3s;
+        }
+        .glow-orb:nth-child(5) {
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, rgba(255, 51, 85, 0.2), transparent);
+            bottom: 30%;
+            left: 10%;
+            animation-delay: -10s;
+        }
+
+        @keyframes orbFloat {
+            0%, 100% { 
+                transform: translate(0, 0) scale(1) rotate(0deg); 
+            }
+            25% { 
+                transform: translate(80px, -50px) scale(1.1) rotate(5deg); 
+            }
+            50% { 
+                transform: translate(-40px, 60px) scale(0.9) rotate(-3deg); 
+            }
+            75% { 
+                transform: translate(50px, -30px) scale(1.05) rotate(2deg); 
+            }
+        }
+
+        /* ===== PRELOADER ===== */
         .preloader {
             position: fixed;
             top: 0; left: 0;
@@ -80,27 +156,368 @@
             align-items: center;
             transition: opacity 0.8s ease;
         }
+        .preloader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .preloader-logo {
+            font-size: 7rem;
+            font-weight: 900;
+            letter-spacing: 20px;
+            background: linear-gradient(90deg, #ffffff, #666666, #ffffff, #666666);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 2rem;
+            animation: logoShine 3s linear infinite;
+            filter: drop-shadow(0 0 30px rgba(255,255,255,0.1));
+        }
+        @keyframes logoShine {
+            0% { background-position: -300% 0; }
+            100% { background-position: 300% 0; }
+        }
+
+        .preloader-ring-container {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin-bottom: 2rem;
+        }
+
+        .preloader-ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            animation: ringSpin 1.5s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+        }
+        .preloader-ring:nth-child(1) {
+            width: 100px;
+            height: 100px;
+            border-top-color: var(--accent);
+            border-right-color: var(--support-color);
+            animation-duration: 1.5s;
+        }
+        .preloader-ring:nth-child(2) {
+            width: 70px;
+            height: 70px;
+            top: 15px;
+            left: 15px;
+            border-bottom-color: var(--support-color);
+            border-left-color: var(--accent);
+            animation-duration: 1.2s;
+            animation-direction: reverse;
+        }
+        .preloader-ring:nth-child(3) {
+            width: 40px;
+            height: 40px;
+            top: 30px;
+            left: 30px;
+            border-top-color: #00ff88;
+            border-right-color: #ffaa00;
+            animation-duration: 1s;
+        }
+        @keyframes ringSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         .loader-bar {
-            width: 200px;
-            height: 2px;
-            background: #222;
-            margin-top: 20px;
+            width: 350px;
+            height: 3px;
+            background: #1a1a1a;
             position: relative;
             overflow: hidden;
+            border-radius: 4px;
+            box-shadow: 0 0 40px rgba(0,0,0,0.9);
         }
         .loader-progress {
             position: absolute;
             top: 0; left: 0;
             height: 100%;
             width: 0%;
-            background: var(--accent);
-            animation: load 2s ease-in-out forwards;
+            background: linear-gradient(90deg, var(--accent), var(--support-color), #00ff88, var(--accent));
+            background-size: 300% 100%;
+            animation: load 3s ease-in-out forwards, shimmer 2s linear infinite;
+            border-radius: 4px;
         }
         @keyframes load {
             0% { width: 0%; }
+            25% { width: 20%; }
+            50% { width: 50%; }
+            75% { width: 80%; }
             100% { width: 100%; }
         }
+        @keyframes shimmer {
+            0% { background-position: -300% 0; }
+            100% { background-position: 300% 0; }
+        }
 
+        .loader-text {
+            margin-top: 1.5rem;
+            font-size: 0.8rem;
+            color: var(--secondary);
+            letter-spacing: 6px;
+            animation: pulse-text 2s ease-in-out infinite;
+        }
+        @keyframes pulse-text {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+
+        .loader-percent {
+            margin-top: 0.5rem;
+            font-size: 1.2rem;
+            font-weight: 300;
+            color: var(--secondary);
+            letter-spacing: 2px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* ===== CHAT ===== */
+        .chat-toggle {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 50;
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--support-color));
+            border: none;
+            color: #fff;
+            font-size: 1.8rem;
+            cursor: pointer;
+            box-shadow: 0 0 30px rgba(217, 0, 255, 0.3);
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: chatPulse 2s ease-in-out infinite;
+        }
+        .chat-toggle:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 0 50px rgba(217, 0, 255, 0.5);
+        }
+        @keyframes chatPulse {
+            0%, 100% { box-shadow: 0 0 30px rgba(217, 0, 255, 0.3); }
+            50% { box-shadow: 0 0 60px rgba(217, 0, 255, 0.6); }
+        }
+
+        .chat-window {
+            position: fixed;
+            bottom: 6rem;
+            right: 2rem;
+            z-index: 50;
+            width: 400px;
+            height: 500px;
+            background: var(--chat-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            backdrop-filter: blur(20px);
+            box-shadow: var(--shadow);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            animation: slideUp 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .chat-window.active {
+            display: flex;
+        }
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .chat-header {
+            padding: 1rem 1.5rem;
+            background: var(--glass);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .chat-header-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .chat-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--support-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: 900;
+            color: #fff;
+            animation: avatarGlow 2s ease-in-out infinite;
+        }
+        @keyframes avatarGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(217, 0, 255, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(217, 0, 255, 0.6); }
+        }
+        .chat-header-text h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .chat-header-text span {
+            font-size: 0.7rem;
+            color: var(--success);
+        }
+        .chat-close {
+            background: none;
+            border: none;
+            color: var(--secondary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: 0.3s;
+            padding: 5px 10px;
+        }
+        .chat-close:hover {
+            color: var(--danger);
+            transform: rotate(90deg);
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+        .chat-messages::-webkit-scrollbar {
+            width: 4px;
+        }
+        .chat-messages::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 4px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 0.7rem 1rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            animation: messageIn 0.3s ease;
+        }
+        @keyframes messageIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        .message.user {
+            align-self: flex-end;
+            background: var(--accent);
+            color: #000;
+        }
+        [data-theme="neon"] .message.user {
+            color: #fff;
+        }
+        .message.bot {
+            align-self: flex-start;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            color: var(--primary);
+        }
+
+        .message.bot .bot-name {
+            font-size: 0.65rem;
+            color: var(--support-color);
+            font-weight: 700;
+            margin-bottom: 0.2rem;
+        }
+
+        .chat-input-area {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 0.5rem;
+        }
+        .chat-input {
+            flex: 1;
+            padding: 0.7rem 1rem;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--primary);
+            font-size: 0.85rem;
+            outline: none;
+            transition: 0.3s;
+        }
+        .chat-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 20px var(--glow);
+        }
+        .chat-send {
+            padding: 0.7rem 1.2rem;
+            background: var(--accent);
+            color: #000;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        [data-theme="neon"] .chat-send {
+            color: #fff;
+        }
+        .chat-send:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px var(--glow);
+        }
+
+        .typing-indicator {
+            display: none;
+            align-self: flex-start;
+            padding: 0.5rem 1rem;
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+        .typing-indicator.active {
+            display: block;
+        }
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+        .typing-dots span {
+            width: 8px;
+            height: 8px;
+            background: var(--secondary);
+            border-radius: 50%;
+            animation: typingBounce 1.4s ease-in-out infinite;
+        }
+        .typing-dots span:nth-child(1) { animation-delay: 0s; }
+        .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typingBounce {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-6px); }
+        }
+
+        /* ===== MAIN INTERFACE ===== */
         .interface {
             position: relative;
             z-index: 10;
@@ -151,15 +568,15 @@
         }
         .dot {
             width: 8px; height: 8px;
-            background: #00ff88;
+            background: var(--success);
             border-radius: 50%;
-            box-shadow: 0 0 10px #00ff88;
-            animation: pulse 2s infinite;
+            box-shadow: 0 0 10px var(--success);
+            animation: pulse-dot 2s infinite;
         }
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
+        @keyframes pulse-dot {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
         }
 
         .card-panel {
@@ -168,7 +585,7 @@
             border-radius: 24px;
             padding: 2.5rem;
             backdrop-filter: blur(20px);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            box-shadow: var(--shadow);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -184,6 +601,11 @@
             background: radial-gradient(circle, var(--glow) 0%, transparent 60%);
             opacity: 0.5;
             pointer-events: none;
+            animation: glow-rotate 20s linear infinite;
+        }
+        @keyframes glow-rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         .features-list {
@@ -197,10 +619,20 @@
             margin-bottom: 10px;
             color: var(--secondary);
             font-size: 0.9rem;
+            transition: 0.3s;
+            cursor: default;
+        }
+        .features-list li:hover {
+            color: var(--primary);
+            transform: translateX(5px);
         }
         .features-list li i {
             color: var(--accent);
             width: 20px;
+            transition: 0.3s;
+        }
+        .features-list li:hover i {
+            transform: scale(1.2) rotate(5deg);
         }
 
         .top-controls {
@@ -229,6 +661,7 @@
             color: #000;
             box-shadow: 0 0 20px var(--accent);
             border-color: var(--accent);
+            transform: scale(1.1) rotate(10deg);
         }
         [data-theme="neon"] .icon-btn:hover {
             color: #fff;
@@ -250,6 +683,7 @@
         .price-tag:hover {
             background: rgba(255, 255, 255, 0.1);
             border-color: var(--accent);
+            transform: scale(1.02);
         }
         .price-tag .price {
             font-size: 2rem;
@@ -277,6 +711,20 @@
             transition: 0.3s;
             text-transform: uppercase;
             letter-spacing: 1px;
+        }
+        .action-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg) translateX(-100%);
+            transition: 0.5s;
+        }
+        .action-btn:hover::after {
+            transform: rotate(45deg) translateX(100%);
         }
         .action-btn:hover {
             transform: translateY(-3px);
@@ -310,6 +758,7 @@
             background: var(--accent);
             color: #000;
             border-color: var(--accent);
+            transform: translateY(-2px) scale(1.02);
         }
         [data-theme="neon"] .emulator-btn:hover {
             background: var(--accent);
@@ -337,6 +786,7 @@
             background: var(--support-color);
             color: #000;
             box-shadow: 0 0 20px var(--support-color);
+            transform: translateY(-2px) scale(1.02);
         }
         [data-theme="neon"] .support-btn:hover {
             background: var(--support-color);
@@ -369,25 +819,101 @@
             .features-list li {
                 font-size: 0.8rem;
             }
-            .emulator-btn {
-                font-size: 0.8rem;
+            .features-list li:hover {
+                transform: translateX(0);
             }
-            .support-btn {
-                font-size: 0.75rem;
+            .preloader-logo {
+                font-size: 4rem;
+                letter-spacing: 10px;
+            }
+            .loader-bar {
+                width: 250px;
+            }
+            .glow-orb {
+                display: none;
+            }
+            .chat-window {
+                width: 90%;
+                right: 5%;
+                bottom: 5rem;
+                height: 400px;
+            }
+            .chat-toggle {
+                bottom: 1.5rem;
+                right: 1.5rem;
+                width: 55px;
+                height: 55px;
+                font-size: 1.5rem;
             }
         }
     </style>
 </head>
 <body data-theme="black">
 
-    <div class="preloader" id="preloader">
-        <h2 style="letter-spacing: 5px; font-weight: 300;">ONYX</h2>
-        <div class="loader-bar"><div class="loader-progress"></div></div>
-    </div>
-
+    <!-- 3D LIVE WALLPAPER -->
+    <div class="glow-orb"></div>
+    <div class="glow-orb"></div>
+    <div class="glow-orb"></div>
+    <div class="glow-orb"></div>
+    <div class="glow-orb"></div>
     <canvas id="canvas-bg"></canvas>
     <div class="noise"></div>
 
+    <!-- PRELOADER -->
+    <div class="preloader" id="preloader">
+        <div class="preloader-logo">ONYX</div>
+        <div class="preloader-ring-container">
+            <div class="preloader-ring"></div>
+            <div class="preloader-ring"></div>
+            <div class="preloader-ring"></div>
+        </div>
+        <div class="loader-bar">
+            <div class="loader-progress"></div>
+        </div>
+        <div class="loader-text">ЗАГРУЗКА СИСТЕМЫ</div>
+        <div class="loader-percent" id="loaderPercent">0%</div>
+    </div>
+
+    <!-- CHAT -->
+    <button class="chat-toggle" id="chatToggle" title="ONYX GPT">
+        <i class="fas fa-comment-dots"></i>
+    </button>
+
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header">
+            <div class="chat-header-info">
+                <div class="chat-avatar">⚡</div>
+                <div class="chat-header-text">
+                    <h4>ONYX GPT</h4>
+                    <span><i class="fas fa-circle" style="font-size: 0.4rem; color: var(--success); margin-right: 4px;"></i>онлайн</span>
+                </div>
+            </div>
+            <button class="chat-close" id="chatClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="message bot">
+                <div class="bot-name">⚡ ONYX GPT</div>
+                Привет! Я ONYX GPT — твой помощник по эмулятору. Задавай любые вопросы о настройке, оптимизации или функциях ONYX! 🚀
+            </div>
+        </div>
+        <div class="typing-indicator" id="typingIndicator">
+            <div class="typing-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" class="chat-input" id="chatInput" placeholder="Спроси что-нибудь...">
+            <button class="chat-send" id="chatSend">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- TOP CONTROLS -->
     <div class="top-controls">
         <button class="icon-btn" id="lang-toggle" title="Change Language">
             <i class="fas fa-globe"></i>
@@ -400,6 +926,7 @@
         </button>
     </div>
 
+    <!-- MAIN INTERFACE -->
     <div class="interface" id="ui-layer">
         
         <div class="info-panel">
@@ -416,7 +943,7 @@
         <div class="card-panel">
             <div>
                 <h3 style="margin-bottom: 0.5rem;" id="feat-title">ОСОБЕННОСТИ</h3>
-                <ul class="features-list" id="features-list">
+                <ul class="features-list">
                     <li><i class="fas fa-palette"></i> <span>Кастомный дизайн.</span></li>
                     <li><i class="fas fa-cogs"></i> <span>Оптимизация конфигов.</span></li>
                     <li><i class="fas fa-rocket"></i> <span>Анлок фпса по бинду.</span></li>
@@ -456,6 +983,7 @@
     </div>
 
     <script>
+        // ===== TEXT DATA =====
         const texts = {
             ru: {
                 status: "ONYX • v3.1",
@@ -483,11 +1011,13 @@
             EUR: { symbol: "€", code: "EUR", rate: 0.010 }
         };
 
+        // ===== STATE =====
         let lang = 'ru';
         let theme = 'black';
         let currentCurrency = 'RUB';
         const basePrice = 550;
 
+        // ===== DOM ELEMENTS =====
         const els = {
             status: document.getElementById('server-status'),
             desc: document.getElementById('desc-text'),
@@ -502,6 +1032,118 @@
             supportText: document.getElementById('support-text')
         };
 
+        const preloader = document.getElementById('preloader');
+        const uiLayer = document.getElementById('ui-layer');
+        const loaderPercent = document.getElementById('loaderPercent');
+
+        // ===== CHAT =====
+        const chatToggle = document.getElementById('chatToggle');
+        const chatWindow = document.getElementById('chatWindow');
+        const chatClose = document.getElementById('chatClose');
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+        const chatSend = document.getElementById('chatSend');
+        const typingIndicator = document.getElementById('typingIndicator');
+
+        // ONYX GPT Knowledge Base
+        const knowledgeBase = {
+            'настройка': 'Для настройки ONYX откройте меню "Настройки" (F1). Там вы можете настроить графику, управление, бинды и многое другое!',
+            'оптимизация': 'Для максимальной производительности рекомендуем: включить аппаратное ускорение, отключить вертикальную синхронизацию, установить приоритет процесса "Высокий" в диспетчере задач.',
+            'фпс': 'Чтобы разблокировать FPS, нажмите комбинацию Ctrl+Shift+F. Также можно настроить лимит FPS в настройках игры (раздел "Графика").',
+            'bind': 'Настраиваемые бинды доступны в разделе "Управление". Вы можете назначить любые клавиши для действий в эмуляторе.',
+            'discord': 'Discord RPC (Rich Presence) автоматически отображает статус "Играет в ONYX" в Discord. Для отключения зайдите в настройки эмулятора.',
+            'вылет': 'ONYX стабилен и не имеет вылетов. Если возникла проблема, проверьте целостность файлов или обновите драйверы видеокарты.',
+            'прицел': 'Встроенный прицел можно включить/выключить клавишей P. Настройки прицела (цвет, размер, форма) доступны в меню "Интерфейс".',
+            'автоустановщик': 'Автоустановщик ONYX автоматически скачивает и устанавливает все необходимые компоненты. Запустите файл Setup.exe как администратор.',
+            'виндовс 11': 'ONYX полностью совместим с Windows 11. Все проблемы с "синими экранами" исправлены в последних обновлениях.',
+            'вк': 'Для входа через ВК нажмите кнопку "Войти через ВК" на экране авторизации. Система автоматически подтянет ваш профиль.',
+            'реклама': 'В ONYX полностью вырезана вся реклама. Наслаждайтесь чистым игровым процессом без отвлекающих элементов!',
+            'движок': 'ONYX использует собственный улучшенный движок на базе Android 13, что обеспечивает максимальную совместимость и производительность.',
+            'вылетов': 'ONYX — стабильный эмулятор. Вылеты полностью отсутствуют благодаря оптимизированному коду и регулярным обновлениям.',
+            'помощь': 'Чем могу помочь? Спрашивай про настройку, оптимизацию, бинды, FPS или любые другие функции ONYX!',
+        };
+
+        const defaultResponses = [
+            'Хороший вопрос! Вот что я знаю по этой теме... 🤔',
+            'Интересно! Давай разберемся вместе. 🔍',
+            'Отличный запрос! Я помогу тебе с этим. 💪',
+            'Знаю ответ! Сейчас расскажу. ✨',
+            'О, это важный момент! Слушай внимательно. 🎯',
+        ];
+
+        function getBotResponse(input) {
+            const lowerInput = input.toLowerCase();
+            for (const [key, response] of Object.entries(knowledgeBase)) {
+                if (lowerInput.includes(key)) {
+                    return response;
+                }
+            }
+            return defaultResponses[Math.floor(Math.random() * defaultResponses.length)] + ' \n\nПодробнее можешь спросить в поддержке или почитать документацию.';
+        }
+
+        function addMessage(text, type) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            if (type === 'bot') {
+                messageDiv.innerHTML = `<div class="bot-name">⚡ ONYX GPT</div>${text}`;
+            } else {
+                messageDiv.textContent = text;
+            }
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function sendMessage() {
+            const text = chatInput.value.trim();
+            if (!text) return;
+
+            addMessage(text, 'user');
+            chatInput.value = '';
+
+            typingIndicator.classList.add('active');
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            setTimeout(() => {
+                typingIndicator.classList.remove('active');
+                const response = getBotResponse(text);
+                addMessage(response, 'bot');
+            }, 800 + Math.random() * 600);
+        }
+
+        chatToggle.addEventListener('click', () => {
+            chatWindow.classList.toggle('active');
+            if (chatWindow.classList.contains('active')) {
+                chatInput.focus();
+            }
+        });
+
+        chatClose.addEventListener('click', () => {
+            chatWindow.classList.remove('active');
+        });
+
+        chatSend.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        // ===== PRELOADER =====
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += Math.random() * 3 + 1;
+            if (progress >= 100) {
+                progress = 100;
+                clearInterval(interval);
+                setTimeout(() => {
+                    preloader.classList.add('hidden');
+                    setTimeout(() => {
+                        uiLayer.classList.add('visible');
+                    }, 300);
+                }, 500);
+            }
+            loaderPercent.textContent = Math.floor(progress) + '%';
+        }, 80);
+
+        // ===== FUNCTIONS =====
         function updatePrice() {
             const currency = currencies[currentCurrency];
             const convertedPrice = Math.round(basePrice * currency.rate);
@@ -510,27 +1152,20 @@
             els.currencyCode.textContent = currency.code;
         }
 
-        window.onload = () => {
-            setTimeout(() => {
-                document.getElementById('preloader').style.opacity = '0';
-                setTimeout(() => {
-                    document.getElementById('preloader').style.display = 'none';
-                    document.getElementById('ui-layer').classList.add('visible');
-                }, 800);
-            }, 1800);
-            updatePrice();
-        };
-
-        document.getElementById('lang-toggle').addEventListener('click', () => {
-            lang = lang === 'ru' ? 'en' : 'ru';
+        function updateLanguage() {
             const t = texts[lang];
-            
             els.status.textContent = t.status;
             els.desc.textContent = t.desc;
             els.featTitle.textContent = t.featTitle;
             els.btn.textContent = t.btn;
             els.emulatorText.textContent = t.emulator;
             els.supportText.textContent = t.support;
+        }
+
+        // ===== EVENT LISTENERS =====
+        document.getElementById('lang-toggle').addEventListener('click', () => {
+            lang = lang === 'ru' ? 'en' : 'ru';
+            updateLanguage();
         });
 
         document.getElementById('theme-toggle').addEventListener('click', () => {
@@ -546,32 +1181,29 @@
             updatePrice();
         });
 
-        // Кнопка "КУПИТЬ ДОСТУП" → onyxsellbot
+        // ===== BUTTON ACTIONS =====
         els.getBtn.addEventListener('click', () => {
             window.open('https://t.me/onyxsellbot', '_blank');
         });
 
-        // Клик по цене → onyxsellbot
         els.priceTag.addEventListener('click', () => {
             window.open('https://t.me/onyxsellbot', '_blank');
         });
 
-        // Кнопка "БЕСПЛАТНЫЙ ЭМУЛЯТОР RAMPAGE" → remagebot
         document.getElementById('emulator-btn').addEventListener('click', () => {
             window.open('https://t.me/remagebot', '_blank');
         });
 
-        // Кнопка "ПОДДЕРЖКА" → apatiyav
         document.getElementById('support-btn').addEventListener('click', () => {
             window.open('https://t.me/apatiyav', '_blank');
         });
 
-        // ===== Canvas Background =====
+        // ===== CANVAS BACKGROUND =====
         const canvas = document.getElementById('canvas-bg');
         const ctx = canvas.getContext('2d');
-        
         let w, h;
         let particles = [];
+        let mouseX = 0, mouseY = 0;
         
         function resize() {
             w = canvas.width = window.innerWidth;
@@ -580,6 +1212,11 @@
         window.addEventListener('resize', resize);
         resize();
 
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
         class Particle {
             constructor() {
                 this.reset();
@@ -587,16 +1224,36 @@
             reset() {
                 this.x = Math.random() * w;
                 this.y = Math.random() * h;
-                this.z = Math.random() * 2 + 0.5;
-                this.size = Math.random() * 1.5;
-                this.opacity = Math.random() * 0.5 + 0.1;
+                this.z = Math.random() * 0.5 + 0.2;
+                this.size = Math.random() * 2.5 + 0.5;
+                this.opacity = Math.random() * 0.4 + 0.1;
+                this.vx = (Math.random() - 0.5) * 0.2;
+                this.vy = (Math.random() - 0.5) * 0.2;
+                this.phase = Math.random() * Math.PI * 2;
+                this.phaseSpeed = Math.random() * 0.02 + 0.01;
+                this.orbit = Math.random() * Math.PI * 2;
+                this.orbitSpeed = Math.random() * 0.005 + 0.002;
+                this.orbitRadius = Math.random() * 50 + 20;
+                this.centerX = this.x;
+                this.centerY = this.y;
             }
             update() {
-                this.y += this.z * (theme === 'neon' ? 1.5 : 0.5);
-                if (this.y > h) {
-                    this.y = 0;
-                    this.x = Math.random() * w;
+                const dx = mouseX - this.x;
+                const dy = mouseY - this.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < 200) {
+                    const force = (200 - dist) / 200 * 0.03;
+                    this.x += (dx / dist) * force;
+                    this.y += (dy / dist) * force;
                 }
+                this.phase += this.phaseSpeed;
+                this.orbit += this.orbitSpeed;
+                this.x += Math.sin(this.phase) * 0.1 + Math.cos(this.orbit) * 0.05;
+                this.y += Math.cos(this.phase) * 0.1 + Math.sin(this.orbit) * 0.05;
+                if (this.x < 0 || this.x > w) this.vx *= -1;
+                if (this.y < 0 || this.y > h) this.vy *= -1;
+                this.x += this.vx;
+                this.y += this.vy;
             }
             draw() {
                 ctx.fillStyle = theme === 'neon' ? `rgba(217, 0, 255, ${this.opacity})` : `rgba(255, 255, 255, ${this.opacity})`;
@@ -606,26 +1263,28 @@
             }
         }
 
-        for(let i=0; i<150; i++) particles.push(new Particle());
+        for(let i=0; i<250; i++) particles.push(new Particle());
 
         let gridOffset = 0;
+        let time = 0;
         
         function animate() {
+            time += 0.01;
             ctx.clearRect(0, 0, w, h);
             
-            ctx.strokeStyle = theme === 'neon' ? 'rgba(217, 0, 255, 0.1)' : 'rgba(255, 255, 255, 0.05)';
+            ctx.strokeStyle = theme === 'neon' ? `rgba(217, 0, 255, ${0.06 + Math.sin(time) * 0.02})` : `rgba(255, 255, 255, ${0.03 + Math.sin(time) * 0.01})`;
             ctx.lineWidth = 1;
             
-            gridOffset = (gridOffset + 0.5) % 50;
+            gridOffset = (gridOffset + 0.3) % 50;
             
-            for (let x = 0; x <= w; x += 100) {
+            for (let x = 0; x <= w; x += 80) {
                 ctx.beginPath();
                 ctx.moveTo(x, 0);
                 ctx.lineTo(x, h);
                 ctx.stroke();
             }
             
-            for (let y = gridOffset; y <= h; y += 50) {
+            for (let y = gridOffset; y <= h; y += 40) {
                 ctx.beginPath();
                 ctx.moveTo(0, y);
                 ctx.lineTo(w, y);
@@ -637,9 +1296,42 @@
                 p.draw();
             });
 
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 120) {
+                        const alpha = 0.04 * (1 - dist / 120);
+                        ctx.strokeStyle = theme === 'neon' 
+                            ? `rgba(217, 0, 255, ${alpha})` 
+                            : `rgba(255, 255, 255, ${alpha})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            for (let i = 0; i < 3; i++) {
+                const x = w * (0.2 + 0.3 * Math.sin(time * 0.2 + i * 2));
+                const y = h * (0.2 + 0.3 * Math.cos(time * 0.15 + i * 1.5));
+                const gradient = ctx.createRadialGradient(x, y, 0, x, y, 300);
+                gradient.addColorStop(0, theme === 'neon' ? 'rgba(217, 0, 255, 0.04)' : 'rgba(255, 255, 255, 0.02)');
+                gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(x - 300, y - 300, 600, 600);
+            }
+
             requestAnimationFrame(animate);
         }
         animate();
+
+        // ===== INIT =====
+        updateLanguage();
+        updatePrice();
     </script>
 </body>
 </html>

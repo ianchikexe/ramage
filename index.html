@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ONYX // SYSTEM</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' style='stop-color:%239900ff'/><stop offset='100%25' style='stop-color:%23d900ff'/></linearGradient></defs><rect width='100' height='100' rx='20' fill='url(%23g)'/><text x='50' y='68' text-anchor='middle' font-size='55' font-weight='900' fill='white' font-family='Arial'>O</text></svg>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -22,6 +22,9 @@
             --danger: #ff3355;
             --chat-bg: rgba(10, 10, 10, 0.85);
             --question-bg: rgba(255,255,255,0.05);
+            --purple: #9900ff;
+            --purple-light: #d900ff;
+            --purple-dark: #6600cc;
         }
 
         [data-theme="neon"] {
@@ -36,6 +39,9 @@
             --shadow: 0 20px 50px rgba(217, 0, 255, 0.2);
             --chat-bg: rgba(10, 0, 20, 0.85);
             --question-bg: rgba(217, 0, 255, 0.1);
+            --purple: #9900ff;
+            --purple-light: #d900ff;
+            --purple-dark: #6600cc;
         }
 
         * {
@@ -90,7 +96,7 @@
         .glow-orb:nth-child(1) {
             width: 500px;
             height: 500px;
-            background: radial-gradient(circle, rgba(100, 200, 255, 0.5), transparent);
+            background: radial-gradient(circle, rgba(153, 0, 255, 0.5), transparent);
             top: -150px;
             left: -150px;
             animation-delay: 0s;
@@ -106,7 +112,7 @@
         .glow-orb:nth-child(3) {
             width: 400px;
             height: 400px;
-            background: radial-gradient(circle, rgba(0, 255, 136, 0.3), transparent);
+            background: radial-gradient(circle, rgba(102, 0, 204, 0.3), transparent);
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
@@ -115,7 +121,7 @@
         .glow-orb:nth-child(4) {
             width: 350px;
             height: 350px;
-            background: radial-gradient(circle, rgba(255, 170, 0, 0.25), transparent);
+            background: radial-gradient(circle, rgba(180, 0, 255, 0.25), transparent);
             top: 20%;
             right: 10%;
             animation-delay: -3s;
@@ -123,7 +129,7 @@
         .glow-orb:nth-child(5) {
             width: 450px;
             height: 450px;
-            background: radial-gradient(circle, rgba(255, 51, 85, 0.2), transparent);
+            background: radial-gradient(circle, rgba(120, 0, 255, 0.2), transparent);
             bottom: 30%;
             left: 10%;
             animation-delay: -10s;
@@ -167,14 +173,14 @@
             font-size: 7rem;
             font-weight: 900;
             letter-spacing: 20px;
-            background: linear-gradient(90deg, #ffffff, #666666, #ffffff, #666666);
+            background: linear-gradient(90deg, #9900ff, #d900ff, #9900ff, #d900ff);
             background-size: 300% 100%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             margin-bottom: 2rem;
             animation: logoShine 3s linear infinite;
-            filter: drop-shadow(0 0 30px rgba(255,255,255,0.1));
+            filter: drop-shadow(0 0 30px rgba(153, 0, 255, 0.3));
         }
         @keyframes logoShine {
             0% { background-position: -300% 0; }
@@ -197,8 +203,8 @@
         .preloader-ring:nth-child(1) {
             width: 100px;
             height: 100px;
-            border-top-color: var(--accent);
-            border-right-color: var(--support-color);
+            border-top-color: #9900ff;
+            border-right-color: #d900ff;
             animation-duration: 1.5s;
         }
         .preloader-ring:nth-child(2) {
@@ -206,8 +212,8 @@
             height: 70px;
             top: 15px;
             left: 15px;
-            border-bottom-color: var(--support-color);
-            border-left-color: var(--accent);
+            border-bottom-color: #d900ff;
+            border-left-color: #9900ff;
             animation-duration: 1.2s;
             animation-direction: reverse;
         }
@@ -216,8 +222,8 @@
             height: 40px;
             top: 30px;
             left: 30px;
-            border-top-color: #00ff88;
-            border-right-color: #ffaa00;
+            border-top-color: #6600cc;
+            border-right-color: #b300ff;
             animation-duration: 1s;
         }
         @keyframes ringSpin {
@@ -239,7 +245,7 @@
             top: 0; left: 0;
             height: 100%;
             width: 0%;
-            background: linear-gradient(90deg, var(--accent), var(--support-color), #00ff88, var(--accent));
+            background: linear-gradient(90deg, #9900ff, #d900ff, #6600cc, #9900ff);
             background-size: 300% 100%;
             animation: load 3s ease-in-out forwards, shimmer 2s linear infinite;
             border-radius: 4px;
@@ -272,9 +278,10 @@
             margin-top: 0.5rem;
             font-size: 1.2rem;
             font-weight: 300;
-            color: var(--secondary);
+            color: #9900ff;
             letter-spacing: 2px;
             font-variant-numeric: tabular-nums;
+            text-shadow: 0 0 20px rgba(153, 0, 255, 0.3);
         }
 
         /* ===== CHAT ===== */
@@ -286,12 +293,12 @@
             width: 65px;
             height: 65px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent), var(--support-color));
+            background: linear-gradient(135deg, #9900ff, #d900ff);
             border: none;
             color: #fff;
             font-size: 1.8rem;
             cursor: pointer;
-            box-shadow: 0 0 30px rgba(217, 0, 255, 0.3);
+            box-shadow: 0 0 30px rgba(153, 0, 255, 0.4);
             transition: 0.3s;
             display: flex;
             align-items: center;
@@ -299,12 +306,15 @@
             animation: chatPulse 2s ease-in-out infinite;
         }
         .chat-toggle:hover {
-            transform: scale(1.1) rotate(5deg);
-            box-shadow: 0 0 50px rgba(217, 0, 255, 0.5);
+            transform: scale(1.1) rotate(10deg);
+            box-shadow: 0 0 50px rgba(153, 0, 255, 0.6);
+        }
+        .chat-toggle i {
+            filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
         }
         @keyframes chatPulse {
-            0%, 100% { box-shadow: 0 0 30px rgba(217, 0, 255, 0.3); }
-            50% { box-shadow: 0 0 60px rgba(217, 0, 255, 0.6); }
+            0%, 100% { box-shadow: 0 0 30px rgba(153, 0, 255, 0.4); }
+            50% { box-shadow: 0 0 60px rgba(153, 0, 255, 0.7); }
         }
 
         .chat-window {
@@ -356,7 +366,7 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent), var(--support-color));
+            background: linear-gradient(135deg, #9900ff, #d900ff);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -364,15 +374,19 @@
             font-weight: 900;
             color: #fff;
             animation: avatarGlow 2s ease-in-out infinite;
+            text-shadow: 0 0 20px rgba(255,255,255,0.3);
         }
         @keyframes avatarGlow {
-            0%, 100% { box-shadow: 0 0 20px rgba(217, 0, 255, 0.3); }
-            50% { box-shadow: 0 0 40px rgba(217, 0, 255, 0.6); }
+            0%, 100% { box-shadow: 0 0 20px rgba(153, 0, 255, 0.4); }
+            50% { box-shadow: 0 0 40px rgba(153, 0, 255, 0.8); }
         }
         .chat-header-text h4 {
             font-size: 0.95rem;
             font-weight: 700;
             color: var(--primary);
+        }
+        .chat-header-text h4 span {
+            color: #9900ff;
         }
         .chat-header-text span {
             font-size: 0.7rem;
@@ -388,7 +402,7 @@
             padding: 5px 10px;
         }
         .chat-close:hover {
-            color: var(--danger);
+            color: #d900ff;
             transform: rotate(90deg);
         }
 
@@ -407,7 +421,7 @@
             background: transparent;
         }
         .chat-messages::-webkit-scrollbar-thumb {
-            background: var(--accent);
+            background: #9900ff;
             border-radius: 4px;
         }
 
@@ -416,7 +430,7 @@
             padding: 0.7rem 1rem;
             border-radius: 12px;
             font-size: 0.85rem;
-            line-height: 1.5;
+            line-height: 1.6;
             animation: messageIn 0.3s ease;
             word-wrap: break-word;
         }
@@ -432,11 +446,9 @@
         }
         .message.user {
             align-self: flex-end;
-            background: var(--accent);
-            color: #000;
-        }
-        [data-theme="neon"] .message.user {
+            background: linear-gradient(135deg, #9900ff, #d900ff);
             color: #fff;
+            box-shadow: 0 0 20px rgba(153, 0, 255, 0.3);
         }
         .message.bot {
             align-self: flex-start;
@@ -447,7 +459,7 @@
 
         .message.bot .bot-name {
             font-size: 0.65rem;
-            color: var(--support-color);
+            color: #d900ff;
             font-weight: 700;
             margin-bottom: 0.3rem;
             display: flex;
@@ -475,18 +487,18 @@
             content: '▸';
             position: absolute;
             left: 0;
-            color: var(--accent);
+            color: #d900ff;
         }
         .message.bot a {
-            color: var(--support-color);
+            color: #d900ff;
             text-decoration: none;
-            border-bottom: 1px dashed var(--support-color);
+            border-bottom: 1px dashed #d900ff;
             transition: 0.3s;
             word-break: break-all;
         }
         .message.bot a:hover {
-            color: var(--accent);
-            border-bottom-color: var(--accent);
+            color: #9900ff;
+            border-bottom-color: #9900ff;
         }
 
         .chat-input-area {
@@ -510,25 +522,23 @@
             transition: 0.3s;
         }
         .chat-input:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 20px var(--glow);
+            border-color: #9900ff;
+            box-shadow: 0 0 20px rgba(153, 0, 255, 0.3);
         }
         .chat-send {
             padding: 0.7rem 1.2rem;
-            background: var(--accent);
-            color: #000;
+            background: linear-gradient(135deg, #9900ff, #d900ff);
+            color: #fff;
             border: none;
             border-radius: 12px;
             font-weight: 700;
             cursor: pointer;
             transition: 0.3s;
-        }
-        [data-theme="neon"] .chat-send {
-            color: #fff;
+            box-shadow: 0 0 20px rgba(153, 0, 255, 0.3);
         }
         .chat-send:hover {
             transform: scale(1.05);
-            box-shadow: 0 0 20px var(--glow);
+            box-shadow: 0 0 40px rgba(153, 0, 255, 0.5);
         }
 
         .quick-questions {
@@ -551,10 +561,11 @@
             white-space: nowrap;
         }
         .quick-q:hover {
-            border-color: var(--accent);
-            color: var(--primary);
+            border-color: #9900ff;
+            color: #d900ff;
             transform: scale(1.05);
-            background: rgba(255,255,255,0.05);
+            background: rgba(153, 0, 255, 0.1);
+            box-shadow: 0 0 20px rgba(153, 0, 255, 0.2);
         }
 
         .typing-indicator {
@@ -575,7 +586,7 @@
         .typing-dots span {
             width: 8px;
             height: 8px;
-            background: var(--secondary);
+            background: #9900ff;
             border-radius: 50%;
             animation: typingBounce 1.4s ease-in-out infinite;
         }
@@ -619,19 +630,25 @@
             letter-spacing: -2px;
             margin-bottom: 1rem;
             text-transform: uppercase;
-            background: linear-gradient(to right, var(--primary), var(--secondary));
+            background: linear-gradient(to right, #9900ff, #d900ff, #9900ff);
+            background-size: 200% 100%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            animation: titleShine 3s linear infinite;
+        }
+        @keyframes titleShine {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
         }
         .status-badge {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: rgba(255,255,255,0.05);
+            background: rgba(153, 0, 255, 0.1);
             padding: 8px 16px;
             border-radius: 50px;
-            border: 1px solid var(--border);
+            border: 1px solid rgba(153, 0, 255, 0.3);
             font-size: 0.8rem;
             margin-bottom: 2rem;
             backdrop-filter: blur(5px);
@@ -668,7 +685,7 @@
             top: -50%; left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, var(--glow) 0%, transparent 60%);
+            background: radial-gradient(circle, rgba(153, 0, 255, 0.2) 0%, transparent 60%);
             opacity: 0.5;
             pointer-events: none;
             animation: glow-rotate 20s linear infinite;
@@ -697,12 +714,13 @@
             transform: translateX(5px);
         }
         .features-list li i {
-            color: var(--accent);
+            color: #9900ff;
             width: 20px;
             transition: 0.3s;
         }
         .features-list li:hover i {
             transform: scale(1.2) rotate(5deg);
+            color: #d900ff;
         }
 
         .top-controls {
@@ -727,14 +745,11 @@
             backdrop-filter: blur(5px);
         }
         .icon-btn:hover {
-            background: var(--accent);
-            color: #000;
-            box-shadow: 0 0 20px var(--accent);
-            border-color: var(--accent);
-            transform: scale(1.1) rotate(10deg);
-        }
-        [data-theme="neon"] .icon-btn:hover {
+            background: linear-gradient(135deg, #9900ff, #d900ff);
             color: #fff;
+            box-shadow: 0 0 20px rgba(153, 0, 255, 0.5);
+            border-color: #9900ff;
+            transform: scale(1.1) rotate(10deg);
         }
 
         .price-tag {
@@ -744,21 +759,22 @@
             gap: 10px;
             margin-bottom: 1rem;
             padding: 10px;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(153, 0, 255, 0.05);
             border-radius: 12px;
-            border: 1px solid var(--border);
+            border: 1px solid rgba(153, 0, 255, 0.2);
             cursor: pointer;
             transition: 0.3s;
         }
         .price-tag:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: var(--accent);
+            background: rgba(153, 0, 255, 0.1);
+            border-color: #9900ff;
             transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(153, 0, 255, 0.2);
         }
         .price-tag .price {
             font-size: 2rem;
             font-weight: 900;
-            color: var(--accent);
+            color: #d900ff;
         }
         .price-tag .currency {
             font-size: 1.2rem;
@@ -769,8 +785,8 @@
         .action-btn {
             width: 100%;
             padding: 1.2rem;
-            background: var(--primary);
-            color: #000;
+            background: linear-gradient(135deg, #9900ff, #d900ff);
+            color: #fff;
             border: none;
             border-radius: 12px;
             font-weight: 800;
@@ -781,6 +797,7 @@
             transition: 0.3s;
             text-transform: uppercase;
             letter-spacing: 1px;
+            box-shadow: 0 0 30px rgba(153, 0, 255, 0.3);
         }
         .action-btn::after {
             content: '';
@@ -789,7 +806,7 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
             transform: rotate(45deg) translateX(-100%);
             transition: 0.5s;
         }
@@ -798,12 +815,7 @@
         }
         .action-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(255,255,255,0.2);
-        }
-        [data-theme="neon"] .action-btn {
-            background: var(--accent);
-            color: #fff;
-            box-shadow: 0 0 20px rgba(217, 0, 255, 0.4);
+            box-shadow: 0 10px 40px rgba(153, 0, 255, 0.5);
         }
 
         .emulator-btn {
@@ -825,14 +837,11 @@
             letter-spacing: 0.5px;
         }
         .emulator-btn:hover {
-            background: var(--accent);
-            color: #000;
-            border-color: var(--accent);
-            transform: translateY(-2px) scale(1.02);
-        }
-        [data-theme="neon"] .emulator-btn:hover {
-            background: var(--accent);
+            background: linear-gradient(135deg, #9900ff, #d900ff);
             color: #fff;
+            border-color: #9900ff;
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 0 30px rgba(153, 0, 255, 0.3);
         }
 
         .support-btn {
@@ -968,7 +977,7 @@
             <div class="chat-header-info">
                 <div class="chat-avatar">⚡</div>
                 <div class="chat-header-text">
-                    <h4>ONYX GPT</h4>
+                    <h4>ONYX <span>GPT</span></h4>
                     <span><i class="fas fa-circle" style="font-size: 0.4rem; color: var(--success); margin-right: 4px;"></i>онлайн</span>
                 </div>
             </div>
@@ -979,7 +988,12 @@
         <div class="chat-messages" id="chatMessages">
             <div class="message bot">
                 <div class="bot-name">⚡ ONYX GPT <i class="fas fa-circle"></i></div>
-                Привет! Я ONYX GPT — твой помощник по эмулятору. Задавай вопросы или выбери один из готовых вопросов ниже! 🚀
+                Привет! Я ONYX GPT — твой умный помощник. Можешь спросить меня о чём угодно! 🚀<br><br>
+                💡 <b>Готовые вопросы ниже:</b><br>
+                • Функции ONYX<br>
+                • Отключение Hyper-V<br>
+                • Удаление Bluestacks<br>
+                • Проверка на вирусы
             </div>
         </div>
         <div class="typing-indicator" id="typingIndicator">
@@ -991,9 +1005,9 @@
         </div>
         <div class="quick-questions" id="quickQuestions">
             <button class="quick-q" data-question="функции">📋 Функции ONYX</button>
-            <button class="quick-q" data-question="hyper-v">🛑 Отключение Hyper-V</button>
-            <button class="quick-q" data-question="bluestacks">🗑️ Удалить Bluestacks</button>
-            <button class="quick-q" data-question="virus">🔒 Проверка на вирусы</button>
+            <button class="quick-q" data-question="hyper-v">🛑 Hyper-V</button>
+            <button class="quick-q" data-question="bluestacks">🗑️ Bluestacks</button>
+            <button class="quick-q" data-question="virus">🔒 Вирусы</button>
         </div>
         <div class="chat-input-area">
             <input type="text" class="chat-input" id="chatInput" placeholder="Спроси что-нибудь...">
@@ -1032,7 +1046,7 @@
 
         <div class="card-panel">
             <div>
-                <h3 style="margin-bottom: 0.5rem;" id="feat-title">ОСОБЕННОСТИ</h3>
+                <h3 style="margin-bottom: 0.5rem; color: #9900ff;" id="feat-title">ОСОБЕННОСТИ</h3>
                 <ul class="features-list">
                     <li><i class="fas fa-palette"></i> <span>Кастомный дизайн.</span></li>
                     <li><i class="fas fa-cogs"></i> <span>Оптимизация конфигов.</span></li>
@@ -1147,6 +1161,102 @@
             'virus': `🔒 <b>Как проверить эмулятор на вирусы:</b><br><br>Для проверки ONYX на вирусы используйте VirusTotal:<br><br>1️⃣ Перейдите на сайт VirusTotal<br>2️⃣ Нажмите "Выбрать файл"<br>3️⃣ Выберите файл эмулятора<br>4️⃣ Дождитесь завершения проверки<br><br>📎 <b>Ссылка для проверки:</b><br><a href="https://www.virustotal.com/gui/home/upload" target="_blank">🔗 VirusTotal - Проверка файлов</a><br><br>✅ ONYX полностью безопасен и не содержит вирусов!`
         };
 
+        // ===== SMART AI RESPONSES =====
+        function generateAIResponse(input) {
+            const lowerInput = input.toLowerCase();
+            
+            if (lowerInput.includes('погод') || lowerInput.includes('дождь') || lowerInput.includes('солнце')) {
+                return '🌤️ Я не могу предсказать погоду, но могу сказать, что в ONYX всегда солнечно! 😄 А вообще, лучше проверь погоду в Яндекс.Погоде.';
+            }
+            
+            if (lowerInput.includes('время') || lowerInput.includes('час') || lowerInput.includes('сколько')) {
+                const now = new Date();
+                return `🕐 Текущее время: ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}. Не забывай, что время в ONYX всегда идёт быстрее — мы разогнали тайминг! 🚀`;
+            }
+            
+            if (lowerInput.includes('кто ты') || lowerInput.includes('ты кто') || lowerInput.includes('что ты умеешь')) {
+                return `⚡ Я — ONYX GPT, твой персональный ИИ-помощник!<br><br>🔹 Помогаю с вопросами по эмулятору ONYX<br>🔹 Отвечаю на любые вопросы<br>🔹 Объясняю сложные вещи простым языком<br>🔹 Всегда онлайн и готов помочь!<br><br>💡 Можешь спросить меня о чём угодно — от настроек до философии!`;
+            }
+            
+            if (lowerInput.includes('создатель') || lowerInput.includes('разработчик') || lowerInput.includes('кто сделал')) {
+                return '👨‍💻 ONYX создан командой талантливых разработчиков, которые вложили душу в этот проект. А я — их цифровой помощник, созданный для общения с пользователями! 🚀';
+            }
+            
+            if (lowerInput.includes('цена') || lowerInput.includes('стоит') || lowerInput.includes('рублей') || lowerInput.includes('денег')) {
+                return `💰 Цена ONYX составляет всего 550 рублей! Это доступный тариф, который открывает доступ ко всем функциям эмулятора. Нажми кнопку "КУПИТЬ ДОСТУП" на сайте — и ты получишь ключ доступа.`;
+            }
+            
+            if (lowerInput.includes('скачать') || lowerInput.includes('загрузить') || lowerInput.includes('download')) {
+                return '📥 Скачать ONYX можно на официальном сайте. К сожалению, я не могу дать прямую ссылку здесь, но ты можешь перейти на сайт и найти раздел "Скачать" в меню. Все файлы проверены и безопасны!';
+            }
+            
+            if (lowerInput.includes('систем') || lowerInput.includes('требовани') || lowerInput.includes('компьютер') || lowerInput.includes('пк')) {
+                return `💻 <b>Системные требования ONYX:</b><br><br>• ОС: Windows 10/11 (64-bit)<br>• Процессор: Intel Core i3 или AMD Ryzen 3<br>• ОЗУ: 4 ГБ (рекомендуется 8 ГБ)<br>• Видеокарта: с поддержкой DirectX 11<br>• Место на диске: 500 МБ<br><br>🚀 ONYX оптимизирован для работы даже на слабых ПК!`;
+            }
+            
+            if (lowerInput.includes('поддержк') || lowerInput.includes('помощь') || lowerInput.includes('помоги') || lowerInput.includes('проблем')) {
+                return `🤝 <b>Поддержка ONYX:</b><br><br>Если у тебя возникла проблема, ты можешь:<br><br>1️⃣ Нажать кнопку "ПОДДЕРЖКА" на сайте — она ведёт в Telegram<br>2️⃣ Написать в чат с ботом ONYX GPT (я здесь!)<br>3️⃣ Посмотреть раздел "Частые вопросы"<br><br>⚠️ Я всегда готов помочь, просто опиши проблему подробнее!`;
+            }
+            
+            if (lowerInput.includes('привет') || lowerInput.includes('здравствуй') || lowerInput.includes('хай') || lowerInput.includes('ку')) {
+                const greetings = [
+                    'Привет! 👋 Рад тебя видеть! Чем могу помочь?',
+                    'Здравствуй! 🌟 Как у тебя дела? Спрашивай что угодно!',
+                    'Хай! 😊 Что интересует? Я всегда на связи!',
+                    'Приветствую! 🚀 ONYX GPT готов к диалогу!'
+                ];
+                return greetings[Math.floor(Math.random() * greetings.length)];
+            }
+            
+            if (lowerInput.includes('пока') || lowerInput.includes('до свидания') || lowerInput.includes('удачи') || lowerInput.includes('спасибо') && lowerInput.includes('все')) {
+                const farewells = [
+                    'Пока! 👋 Заходи ещё, я всегда рад помочь!',
+                    'До свидания! 🌟 ONYX GPT всегда на связи!',
+                    'Удачи тебе! 🚀 Если что-то понадобится — пиши!',
+                    'Спасибо за общение! 😊 Было приятно поболтать!'
+                ];
+                return farewells[Math.floor(Math.random() * farewells.length)];
+            }
+            
+            if (lowerInput.includes('будущ') || lowerInput.includes('завтра') || lowerInput.includes('скоро')) {
+                return '🔮 Я не могу предсказывать будущее, но могу сказать, что ONYX будет только улучшаться! Следите за обновлениями. 🚀';
+            }
+            
+            if (lowerInput.includes('жизн') || lowerInput.includes('смысл') || lowerInput.includes('философи')) {
+                return '🤔 Смысл жизни — в развитии и самосовершенствовании. А ещё — в том, чтобы наслаждаться каждым моментом! Как, например, игрой в ONYX — лучшем эмуляторе для ПК! 😄';
+            }
+            
+            if (lowerInput.includes('игр') || lowerInput.includes('играть') || lowerInput.includes('гейм')) {
+                return '🎮 ONYX поддерживает тысячи игр для Android! Ты можешь играть в любимые проекты с максимальной производительностью. Хочешь узнать, как настроить управление под конкретную игру?';
+            }
+            
+            if (lowerInput.includes('дискорд') || lowerInput.includes('discord') || lowerInput.includes('рц')) {
+                return '💬 Discord RPC в ONYX — это крутая фича! Она показывает в твоём профиле Discord, что ты играешь в ONYX. Друзья будут в шоке! 😄 Настройки RPC доступны в меню "Интерфейс".';
+            }
+            
+            const smartResponses = [
+                '🤔 Хм, интересный вопрос! Давай я подумаю... Я уверен, что ONYX поможет тебе с этим!',
+                '💡 Знаешь, это действительно важный момент! ONYX создан для того, чтобы делать твою жизнь проще и интереснее.',
+                '😊 Отличный вопрос! Я бы рекомендовал обратиться к разделу "Поддержка" — там есть ответы на многие вопросы.',
+                '🚀 ONYX — это не просто эмулятор, это целая экосистема! И я рад, что ты здесь.',
+                '🌟 Ты знаешь, я каждый день учусь новому! Спасибо за твой вопрос, он заставляет меня развиваться.',
+            ];
+            
+            if (lowerInput.includes('как') || lowerInput.includes('почему')) {
+                return `🔍 <b>Отличный вопрос!</b><br><br>Я бы рекомендовал изучить официальную документацию ONYX или задать вопрос в чате поддержки. Но если кратко: всё сделано для твоего удобства! 🚀<br><br>Хочешь, я расскажу подробнее о функциях ONYX? Нажми на кнопку "Функции ONYX" внизу.`;
+            }
+            
+            if (lowerInput.includes('что') || lowerInput.includes('кто')) {
+                return `🤔 Ты спрашиваешь о действительно важных вещах! ONYX — это лучший эмулятор, а я — твой верный помощник. <br><br>💡 Если хочешь узнать больше, выбери готовый вопрос внизу или уточни свой запрос, и я постараюсь дать более конкретный ответ!`;
+            }
+            
+            if (lowerInput.includes('помоги') || lowerInput.includes('помощь')) {
+                return `🤝 <b>Я здесь, чтобы помочь!</b><br><br>Ты можешь:<br>• Выбрать готовый вопрос внизу<br>• Написать конкретную проблему<br>• Нажать кнопку "Поддержка" на сайте<br><br>Расскажи подробнее, что у тебя случилось, и я постараюсь решить проблему! 💪`;
+            }
+            
+            return smartResponses[Math.floor(Math.random() * smartResponses.length)] + '<br><br>💡 Если хочешь конкретики — выбери один из готовых вопросов внизу или уточни запрос! Я всегда на связи.';
+        }
+
         function getBotResponse(input) {
             const lowerInput = input.toLowerCase();
             for (const [key, response] of Object.entries(knowledgeBase)) {
@@ -1154,7 +1264,7 @@
                     return response;
                 }
             }
-            return '❓ Я не совсем понял вопрос. Пожалуйста, уточни или выбери один из готовых вопросов ниже.';
+            return generateAIResponse(input);
         }
 
         function addMessage(text, type) {
@@ -1171,18 +1281,15 @@
 
         function sendMessage(text) {
             if (!text || text.trim() === '') return;
-
             addMessage(text, 'user');
             chatInput.value = '';
-
             typingIndicator.classList.add('active');
             chatMessages.scrollTop = chatMessages.scrollHeight;
-
             setTimeout(() => {
                 typingIndicator.classList.remove('active');
                 const response = getBotResponse(text);
                 addMessage(response, 'bot');
-            }, 600 + Math.random() * 400);
+            }, 800 + Math.random() * 600);
         }
 
         // ===== CHAT EVENTS =====
@@ -1208,17 +1315,14 @@
             }
         });
 
-        // ===== QUICK QUESTIONS =====
         quickQuestions.addEventListener('click', (e) => {
             const target = e.target.closest('.quick-q');
             if (target) {
                 const question = target.dataset.question;
                 const text = target.textContent.trim();
                 addMessage(text, 'user');
-                
                 typingIndicator.classList.add('active');
                 chatMessages.scrollTop = chatMessages.scrollHeight;
-
                 setTimeout(() => {
                     typingIndicator.classList.remove('active');
                     const response = getBotResponse(question);
@@ -1337,6 +1441,7 @@
                 this.orbitRadius = Math.random() * 50 + 20;
                 this.centerX = this.x;
                 this.centerY = this.y;
+                this.hue = 270 + Math.random() * 60; // Фиолетовый спектр
             }
             update() {
                 const dx = mouseX - this.x;
@@ -1357,7 +1462,9 @@
                 this.y += this.vy;
             }
             draw() {
-                ctx.fillStyle = theme === 'neon' ? `rgba(217, 0, 255, ${this.opacity})` : `rgba(255, 255, 255, ${this.opacity})`;
+                ctx.fillStyle = theme === 'neon' 
+                    ? `rgba(217, 0, 255, ${this.opacity})` 
+                    : `rgba(153, 0, 255, ${this.opacity})`;
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
                 ctx.fill();
@@ -1373,7 +1480,9 @@
             time += 0.01;
             ctx.clearRect(0, 0, w, h);
             
-            ctx.strokeStyle = theme === 'neon' ? `rgba(217, 0, 255, ${0.06 + Math.sin(time) * 0.02})` : `rgba(255, 255, 255, ${0.03 + Math.sin(time) * 0.01})`;
+            ctx.strokeStyle = theme === 'neon' 
+                ? `rgba(217, 0, 255, ${0.06 + Math.sin(time) * 0.02})` 
+                : `rgba(153, 0, 255, ${0.05 + Math.sin(time) * 0.015})`;
             ctx.lineWidth = 1;
             
             gridOffset = (gridOffset + 0.3) % 50;
@@ -1406,7 +1515,7 @@
                         const alpha = 0.04 * (1 - dist / 120);
                         ctx.strokeStyle = theme === 'neon' 
                             ? `rgba(217, 0, 255, ${alpha})` 
-                            : `rgba(255, 255, 255, ${alpha})`;
+                            : `rgba(153, 0, 255, ${alpha})`;
                         ctx.lineWidth = 0.5;
                         ctx.beginPath();
                         ctx.moveTo(particles[i].x, particles[i].y);
@@ -1420,7 +1529,7 @@
                 const x = w * (0.2 + 0.3 * Math.sin(time * 0.2 + i * 2));
                 const y = h * (0.2 + 0.3 * Math.cos(time * 0.15 + i * 1.5));
                 const gradient = ctx.createRadialGradient(x, y, 0, x, y, 300);
-                gradient.addColorStop(0, theme === 'neon' ? 'rgba(217, 0, 255, 0.04)' : 'rgba(255, 255, 255, 0.02)');
+                gradient.addColorStop(0, theme === 'neon' ? 'rgba(217, 0, 255, 0.04)' : 'rgba(153, 0, 255, 0.03)');
                 gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
                 ctx.fillStyle = gradient;
                 ctx.fillRect(x - 300, y - 300, 600, 600);

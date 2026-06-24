@@ -323,7 +323,7 @@
             right: 2rem;
             z-index: 50;
             width: 420px;
-            height: 550px;
+            height: 480px;
             background: var(--chat-bg);
             border: 1px solid var(--border);
             border-radius: 20px;
@@ -501,56 +501,18 @@
             border-bottom-color: #9900ff;
         }
 
-        .chat-input-area {
-            padding: 0.8rem 1.5rem;
-            border-top: 1px solid var(--border);
-            display: flex;
-            gap: 0.5rem;
-            flex-shrink: 0;
-            flex-wrap: wrap;
-        }
-        .chat-input {
-            flex: 1;
-            min-width: 150px;
-            padding: 0.7rem 1rem;
-            background: rgba(0,0,0,0.3);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            color: var(--primary);
-            font-size: 0.85rem;
-            outline: none;
-            transition: 0.3s;
-        }
-        .chat-input:focus {
-            border-color: #9900ff;
-            box-shadow: 0 0 20px rgba(153, 0, 255, 0.3);
-        }
-        .chat-send {
-            padding: 0.7rem 1.2rem;
-            background: linear-gradient(135deg, #9900ff, #d900ff);
-            color: #fff;
-            border: none;
-            border-radius: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.3s;
-            box-shadow: 0 0 20px rgba(153, 0, 255, 0.3);
-        }
-        .chat-send:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 40px rgba(153, 0, 255, 0.5);
-        }
-
+        /* ===== QUICK QUESTIONS (ТОЛЬКО 4 КНОПКИ) ===== */
         .quick-questions {
             display: flex;
             gap: 0.5rem;
-            padding: 0.5rem 1.5rem 0.8rem 1.5rem;
+            padding: 0.8rem 1.5rem;
             flex-wrap: wrap;
             border-top: 1px solid var(--border);
             flex-shrink: 0;
+            justify-content: center;
         }
         .quick-q {
-            padding: 0.3rem 0.8rem;
+            padding: 0.5rem 1rem;
             background: var(--question-bg);
             border: 1px solid var(--border);
             border-radius: 20px;
@@ -559,6 +521,9 @@
             cursor: pointer;
             transition: 0.3s;
             white-space: nowrap;
+            flex: 1;
+            min-width: 80px;
+            text-align: center;
         }
         .quick-q:hover {
             border-color: #9900ff;
@@ -568,34 +533,74 @@
             box-shadow: 0 0 20px rgba(153, 0, 255, 0.2);
         }
 
-        .typing-indicator {
+        .chat-input-area {
             display: none;
-            align-self: flex-start;
-            padding: 0.5rem 1rem;
-            background: rgba(255,255,255,0.05);
-            border-radius: 12px;
-            border: 1px solid var(--border);
         }
-        .typing-indicator.active {
-            display: block;
-        }
-        .typing-dots {
+
+        /* ===== BOTTOM LINKS (ОТЗЫВЫ И КАНАЛ) ===== */
+        .bottom-links {
+            position: fixed;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 15;
             display: flex;
-            gap: 4px;
+            gap: 1.5rem;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            padding: 0.7rem 1.5rem;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            animation: fadeUp 1s ease 0.5s both;
         }
-        .typing-dots span {
-            width: 8px;
-            height: 8px;
-            background: #9900ff;
-            border-radius: 50%;
-            animation: typingBounce 1.4s ease-in-out infinite;
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
         }
-        .typing-dots span:nth-child(1) { animation-delay: 0s; }
-        .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
-        .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
-        @keyframes typingBounce {
-            0%, 60%, 100% { transform: translateY(0); }
-            30% { transform: translateY(-6px); }
+        .bottom-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--secondary);
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: 0.3s;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+        }
+        .bottom-link i {
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+        .bottom-link:hover {
+            color: #d900ff;
+            background: rgba(153, 0, 255, 0.1);
+            transform: scale(1.05);
+        }
+        .bottom-link:hover i {
+            transform: scale(1.2);
+        }
+        .bottom-link.reviews {
+            color: #ffaa00;
+        }
+        .bottom-link.reviews:hover {
+            color: #ffcc44;
+            background: rgba(255, 170, 0, 0.1);
+        }
+        .bottom-link.channel {
+            color: #00d4ff;
+        }
+        .bottom-link.channel:hover {
+            color: #44eeff;
+            background: rgba(0, 212, 255, 0.1);
         }
 
         /* ===== MAIN INTERFACE ===== */
@@ -611,6 +616,7 @@
             opacity: 0;
             transform: scale(0.95);
             transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+            margin-bottom: 2rem;
         }
         .interface.visible {
             opacity: 1;
@@ -877,6 +883,7 @@
                 grid-template-columns: 1fr;
                 text-align: center;
                 padding: 1rem;
+                margin-bottom: 4rem;
             }
             .info-panel {
                 align-items: center;
@@ -915,7 +922,7 @@
                 width: 95%;
                 right: 2.5%;
                 bottom: 5rem;
-                height: 450px;
+                height: 400px;
             }
             .chat-toggle {
                 bottom: 1.5rem;
@@ -925,18 +932,25 @@
                 font-size: 1.5rem;
             }
             .quick-questions {
-                padding: 0.3rem 1rem 0.5rem 1rem;
+                padding: 0.5rem 1rem;
             }
             .quick-q {
                 font-size: 0.6rem;
-                padding: 0.2rem 0.6rem;
+                padding: 0.3rem 0.6rem;
+                min-width: 60px;
             }
-            .chat-input-area {
+            .bottom-links {
+                bottom: 0.8rem;
                 padding: 0.5rem 1rem;
+                gap: 0.8rem;
+                flex-wrap: wrap;
+                justify-content: center;
+                border-radius: 30px;
+                width: 95%;
             }
-            .chat-input {
-                min-width: 100px;
-                font-size: 0.8rem;
+            .bottom-link {
+                font-size: 0.65rem;
+                padding: 0.2rem 0.5rem;
             }
         }
     </style>
@@ -988,33 +1002,31 @@
         <div class="chat-messages" id="chatMessages">
             <div class="message bot">
                 <div class="bot-name">⚡ ONYX GPT <i class="fas fa-circle"></i></div>
-                Привет! Я ONYX GPT — твой умный помощник. Можешь спросить меня о чём угодно! 🚀<br><br>
-                💡 <b>Готовые вопросы ниже:</b><br>
-                • Функции ONYX<br>
-                • Отключение Hyper-V<br>
-                • Удаление Bluestacks<br>
-                • Проверка на вирусы
-            </div>
-        </div>
-        <div class="typing-indicator" id="typingIndicator">
-            <div class="typing-dots">
-                <span></span>
-                <span></span>
-                <span></span>
+                Привет! Я ONYX GPT. Выбери один из вопросов ниже, чтобы узнать больше! 🚀
             </div>
         </div>
         <div class="quick-questions" id="quickQuestions">
             <button class="quick-q" data-question="функции">📋 Функции ONYX</button>
             <button class="quick-q" data-question="hyper-v">🛑 Hyper-V</button>
             <button class="quick-q" data-question="bluestacks">🗑️ Bluestacks</button>
-            <button class="quick-q" data-question="virus">🔒 Вирусы</button>
+            <button class="quick-q" data-question="virus">🛡️ Проверка на вирусы</button>
         </div>
         <div class="chat-input-area">
-            <input type="text" class="chat-input" id="chatInput" placeholder="Спроси что-нибудь...">
-            <button class="chat-send" id="chatSend">
+            <input type="text" class="chat-input" id="chatInput" placeholder="Спроси что-нибудь..." disabled>
+            <button class="chat-send" id="chatSend" disabled>
                 <i class="fas fa-paper-plane"></i>
             </button>
         </div>
+    </div>
+
+    <!-- BOTTOM LINKS -->
+    <div class="bottom-links">
+        <a href="https://t.me/ramotss" target="_blank" class="bottom-link reviews">
+            <i class="fas fa-star"></i> Отзывы
+        </a>
+        <a href="https://t.me/akuma1n" target="_blank" class="bottom-link channel">
+            <i class="fas fa-telegram-plane"></i> Telegram канал
+        </a>
     </div>
 
     <!-- TOP CONTROLS -->
@@ -1145,9 +1157,6 @@
         const chatWindow = document.getElementById('chatWindow');
         const chatClose = document.getElementById('chatClose');
         const chatMessages = document.getElementById('chatMessages');
-        const chatInput = document.getElementById('chatInput');
-        const chatSend = document.getElementById('chatSend');
-        const typingIndicator = document.getElementById('typingIndicator');
         const quickQuestions = document.getElementById('quickQuestions');
 
         // ===== ONYX GPT KNOWLEDGE BASE =====
@@ -1158,104 +1167,8 @@
             
             'bluestacks': `🗑️ <b>Как удалить старый Bluestacks:</b><br><br>1️⃣ Откройте "Панель управления" → "Программы и компоненты"<br>2️⃣ Найдите "BlueStacks" в списке<br>3️⃣ Нажмите "Удалить" и следуйте инструкциям<br>4️⃣ После удаления перезагрузите компьютер<br><br>📎 <b>Подробная инструкция:</b><br><a href="https://t.me/c/3921368867/7" target="_blank">🔗 Нажмите для подробной инструкции</a>`,
             
-            'virus': `🔒 <b>Как проверить эмулятор на вирусы:</b><br><br>Для проверки ONYX на вирусы используйте VirusTotal:<br><br>1️⃣ Перейдите на сайт VirusTotal<br>2️⃣ Нажмите "Выбрать файл"<br>3️⃣ Выберите файл эмулятора<br>4️⃣ Дождитесь завершения проверки<br><br>📎 <b>Ссылка для проверки:</b><br><a href="https://www.virustotal.com/gui/home/upload" target="_blank">🔗 VirusTotal - Проверка файлов</a><br><br>✅ ONYX полностью безопасен и не содержит вирусов!`
+            'вирус': `🛡️ <b>Проверка ONYX на вирусы:</b><br><br>🔹 ONYX полностью безопасен и не содержит вирусов<br>🔹 Все файлы проходят проверку перед релизом<br>🔹 Регулярные обновления антивирусных баз<br><br>📎 <b>Способы проверки:</b><br><br>1️⃣ <b>Встроенный сканер:</b> В меню "Настройки" → "Безопасность" нажмите "Проверить файлы"<br><br>2️⃣ <b>Сторонние антивирусы:</b> Используйте любой антивирус для сканирования папки с ONYX<br><br>3️⃣ <b>Онлайн-проверка:</b> Загрузите файл на VirusTotal для комплексной проверки<br><br>✅ <b>Гарантия:</b> Мы гарантируем отсутствие вредоносного кода в ONYX!`
         };
-
-        // ===== SMART AI RESPONSES =====
-        function generateAIResponse(input) {
-            const lowerInput = input.toLowerCase();
-            
-            if (lowerInput.includes('погод') || lowerInput.includes('дождь') || lowerInput.includes('солнце')) {
-                return '🌤️ Я не могу предсказать погоду, но могу сказать, что в ONYX всегда солнечно! 😄 А вообще, лучше проверь погоду в Яндекс.Погоде.';
-            }
-            
-            if (lowerInput.includes('время') || lowerInput.includes('час') || lowerInput.includes('сколько')) {
-                const now = new Date();
-                return `🕐 Текущее время: ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}. Не забывай, что время в ONYX всегда идёт быстрее — мы разогнали тайминг! 🚀`;
-            }
-            
-            if (lowerInput.includes('кто ты') || lowerInput.includes('ты кто') || lowerInput.includes('что ты умеешь')) {
-                return `⚡ Я — ONYX GPT, твой персональный ИИ-помощник!<br><br>🔹 Помогаю с вопросами по эмулятору ONYX<br>🔹 Отвечаю на любые вопросы<br>🔹 Объясняю сложные вещи простым языком<br>🔹 Всегда онлайн и готов помочь!<br><br>💡 Можешь спросить меня о чём угодно — от настроек до философии!`;
-            }
-            
-            if (lowerInput.includes('создатель') || lowerInput.includes('разработчик') || lowerInput.includes('кто сделал')) {
-                return '👨‍💻 ONYX создан командой талантливых разработчиков, которые вложили душу в этот проект. А я — их цифровой помощник, созданный для общения с пользователями! 🚀';
-            }
-            
-            if (lowerInput.includes('цена') || lowerInput.includes('стоит') || lowerInput.includes('рублей') || lowerInput.includes('денег')) {
-                return `💰 Цена ONYX составляет всего 550 рублей! Это доступный тариф, который открывает доступ ко всем функциям эмулятора. Нажми кнопку "КУПИТЬ ДОСТУП" на сайте — и ты получишь ключ доступа.`;
-            }
-            
-            if (lowerInput.includes('скачать') || lowerInput.includes('загрузить') || lowerInput.includes('download')) {
-                return '📥 Скачать ONYX можно на официальном сайте. К сожалению, я не могу дать прямую ссылку здесь, но ты можешь перейти на сайт и найти раздел "Скачать" в меню. Все файлы проверены и безопасны!';
-            }
-            
-            if (lowerInput.includes('систем') || lowerInput.includes('требовани') || lowerInput.includes('компьютер') || lowerInput.includes('пк')) {
-                return `💻 <b>Системные требования ONYX:</b><br><br>• ОС: Windows 10/11 (64-bit)<br>• Процессор: Intel Core i3 или AMD Ryzen 3<br>• ОЗУ: 4 ГБ (рекомендуется 8 ГБ)<br>• Видеокарта: с поддержкой DirectX 11<br>• Место на диске: 500 МБ<br><br>🚀 ONYX оптимизирован для работы даже на слабых ПК!`;
-            }
-            
-            if (lowerInput.includes('поддержк') || lowerInput.includes('помощь') || lowerInput.includes('помоги') || lowerInput.includes('проблем')) {
-                return `🤝 <b>Поддержка ONYX:</b><br><br>Если у тебя возникла проблема, ты можешь:<br><br>1️⃣ Нажать кнопку "ПОДДЕРЖКА" на сайте — она ведёт в Telegram<br>2️⃣ Написать в чат с ботом ONYX GPT (я здесь!)<br>3️⃣ Посмотреть раздел "Частые вопросы"<br><br>⚠️ Я всегда готов помочь, просто опиши проблему подробнее!`;
-            }
-            
-            if (lowerInput.includes('привет') || lowerInput.includes('здравствуй') || lowerInput.includes('хай') || lowerInput.includes('ку')) {
-                const greetings = [
-                    'Привет! 👋 Рад тебя видеть! Чем могу помочь?',
-                    'Здравствуй! 🌟 Как у тебя дела? Спрашивай что угодно!',
-                    'Хай! 😊 Что интересует? Я всегда на связи!',
-                    'Приветствую! 🚀 ONYX GPT готов к диалогу!'
-                ];
-                return greetings[Math.floor(Math.random() * greetings.length)];
-            }
-            
-            if (lowerInput.includes('пока') || lowerInput.includes('до свидания') || lowerInput.includes('удачи') || lowerInput.includes('спасибо') && lowerInput.includes('все')) {
-                const farewells = [
-                    'Пока! 👋 Заходи ещё, я всегда рад помочь!',
-                    'До свидания! 🌟 ONYX GPT всегда на связи!',
-                    'Удачи тебе! 🚀 Если что-то понадобится — пиши!',
-                    'Спасибо за общение! 😊 Было приятно поболтать!'
-                ];
-                return farewells[Math.floor(Math.random() * farewells.length)];
-            }
-            
-            if (lowerInput.includes('будущ') || lowerInput.includes('завтра') || lowerInput.includes('скоро')) {
-                return '🔮 Я не могу предсказывать будущее, но могу сказать, что ONYX будет только улучшаться! Следите за обновлениями. 🚀';
-            }
-            
-            if (lowerInput.includes('жизн') || lowerInput.includes('смысл') || lowerInput.includes('философи')) {
-                return '🤔 Смысл жизни — в развитии и самосовершенствовании. А ещё — в том, чтобы наслаждаться каждым моментом! Как, например, игрой в ONYX — лучшем эмуляторе для ПК! 😄';
-            }
-            
-            if (lowerInput.includes('игр') || lowerInput.includes('играть') || lowerInput.includes('гейм')) {
-                return '🎮 ONYX поддерживает тысячи игр для Android! Ты можешь играть в любимые проекты с максимальной производительностью. Хочешь узнать, как настроить управление под конкретную игру?';
-            }
-            
-            if (lowerInput.includes('дискорд') || lowerInput.includes('discord') || lowerInput.includes('рц')) {
-                return '💬 Discord RPC в ONYX — это крутая фича! Она показывает в твоём профиле Discord, что ты играешь в ONYX. Друзья будут в шоке! 😄 Настройки RPC доступны в меню "Интерфейс".';
-            }
-            
-            const smartResponses = [
-                '🤔 Хм, интересный вопрос! Давай я подумаю... Я уверен, что ONYX поможет тебе с этим!',
-                '💡 Знаешь, это действительно важный момент! ONYX создан для того, чтобы делать твою жизнь проще и интереснее.',
-                '😊 Отличный вопрос! Я бы рекомендовал обратиться к разделу "Поддержка" — там есть ответы на многие вопросы.',
-                '🚀 ONYX — это не просто эмулятор, это целая экосистема! И я рад, что ты здесь.',
-                '🌟 Ты знаешь, я каждый день учусь новому! Спасибо за твой вопрос, он заставляет меня развиваться.',
-            ];
-            
-            if (lowerInput.includes('как') || lowerInput.includes('почему')) {
-                return `🔍 <b>Отличный вопрос!</b><br><br>Я бы рекомендовал изучить официальную документацию ONYX или задать вопрос в чате поддержки. Но если кратко: всё сделано для твоего удобства! 🚀<br><br>Хочешь, я расскажу подробнее о функциях ONYX? Нажми на кнопку "Функции ONYX" внизу.`;
-            }
-            
-            if (lowerInput.includes('что') || lowerInput.includes('кто')) {
-                return `🤔 Ты спрашиваешь о действительно важных вещах! ONYX — это лучший эмулятор, а я — твой верный помощник. <br><br>💡 Если хочешь узнать больше, выбери готовый вопрос внизу или уточни свой запрос, и я постараюсь дать более конкретный ответ!`;
-            }
-            
-            if (lowerInput.includes('помоги') || lowerInput.includes('помощь')) {
-                return `🤝 <b>Я здесь, чтобы помочь!</b><br><br>Ты можешь:<br>• Выбрать готовый вопрос внизу<br>• Написать конкретную проблему<br>• Нажать кнопку "Поддержка" на сайте<br><br>Расскажи подробнее, что у тебя случилось, и я постараюсь решить проблему! 💪`;
-            }
-            
-            return smartResponses[Math.floor(Math.random() * smartResponses.length)] + '<br><br>💡 Если хочешь конкретики — выбери один из готовых вопросов внизу или уточни запрос! Я всегда на связи.';
-        }
 
         function getBotResponse(input) {
             const lowerInput = input.toLowerCase();
@@ -1264,7 +1177,7 @@
                     return response;
                 }
             }
-            return generateAIResponse(input);
+            return '❓ Пожалуйста, выбери один из предложенных вопросов ниже.';
         }
 
         function addMessage(text, type) {
@@ -1279,40 +1192,13 @@
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
-        function sendMessage(text) {
-            if (!text || text.trim() === '') return;
-            addMessage(text, 'user');
-            chatInput.value = '';
-            typingIndicator.classList.add('active');
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-            setTimeout(() => {
-                typingIndicator.classList.remove('active');
-                const response = getBotResponse(text);
-                addMessage(response, 'bot');
-            }, 800 + Math.random() * 600);
-        }
-
         // ===== CHAT EVENTS =====
         chatToggle.addEventListener('click', () => {
             chatWindow.classList.toggle('active');
-            if (chatWindow.classList.contains('active')) {
-                chatInput.focus();
-            }
         });
 
         chatClose.addEventListener('click', () => {
             chatWindow.classList.remove('active');
-        });
-
-        chatSend.addEventListener('click', () => {
-            sendMessage(chatInput.value);
-        });
-
-        chatInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                sendMessage(chatInput.value);
-            }
         });
 
         quickQuestions.addEventListener('click', (e) => {
@@ -1321,13 +1207,10 @@
                 const question = target.dataset.question;
                 const text = target.textContent.trim();
                 addMessage(text, 'user');
-                typingIndicator.classList.add('active');
-                chatMessages.scrollTop = chatMessages.scrollHeight;
                 setTimeout(() => {
-                    typingIndicator.classList.remove('active');
                     const response = getBotResponse(question);
                     addMessage(response, 'bot');
-                }, 600 + Math.random() * 400);
+                }, 400);
             }
         });
 
@@ -1441,7 +1324,7 @@
                 this.orbitRadius = Math.random() * 50 + 20;
                 this.centerX = this.x;
                 this.centerY = this.y;
-                this.hue = 270 + Math.random() * 60; // Фиолетовый спектр
+                this.hue = 270 + Math.random() * 60;
             }
             update() {
                 const dx = mouseX - this.x;

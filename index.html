@@ -90,46 +90,46 @@
             filter: blur(80px);
             pointer-events: none;
             z-index: 0;
-            opacity: 0.4;
+            opacity: 0.5;
             animation: orbFloat 20s ease-in-out infinite;
         }
         .glow-orb:nth-child(1) {
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(153, 0, 255, 0.5), transparent);
+            width: 550px;
+            height: 550px;
+            background: radial-gradient(circle, rgba(153, 0, 255, 0.6), transparent);
             top: -150px;
             left: -150px;
             animation-delay: 0s;
         }
         .glow-orb:nth-child(2) {
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(217, 0, 255, 0.4), transparent);
+            width: 650px;
+            height: 650px;
+            background: radial-gradient(circle, rgba(217, 0, 255, 0.5), transparent);
             bottom: -200px;
             right: -200px;
             animation-delay: -7s;
         }
         .glow-orb:nth-child(3) {
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(102, 0, 204, 0.3), transparent);
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, rgba(102, 0, 204, 0.4), transparent);
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             animation-delay: -14s;
         }
         .glow-orb:nth-child(4) {
-            width: 350px;
-            height: 350px;
-            background: radial-gradient(circle, rgba(180, 0, 255, 0.25), transparent);
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(180, 0, 255, 0.35), transparent);
             top: 20%;
             right: 10%;
             animation-delay: -3s;
         }
         .glow-orb:nth-child(5) {
-            width: 450px;
-            height: 450px;
-            background: radial-gradient(circle, rgba(120, 0, 255, 0.2), transparent);
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(120, 0, 255, 0.3), transparent);
             bottom: 30%;
             left: 10%;
             animation-delay: -10s;
@@ -140,17 +140,17 @@
                 transform: translate(0, 0) scale(1) rotate(0deg); 
             }
             25% { 
-                transform: translate(80px, -50px) scale(1.1) rotate(5deg); 
+                transform: translate(80px, -50px) scale(1.15) rotate(5deg); 
             }
             50% { 
-                transform: translate(-40px, 60px) scale(0.9) rotate(-3deg); 
+                transform: translate(-40px, 60px) scale(0.85) rotate(-3deg); 
             }
             75% { 
-                transform: translate(50px, -30px) scale(1.05) rotate(2deg); 
+                transform: translate(50px, -30px) scale(1.08) rotate(2deg); 
             }
         }
 
-        /* ===== PRELOADER ===== */
+        /* ===== PRELOADER (УЛУЧШЕННЫЙ) ===== */
         .preloader {
             position: fixed;
             top: 0; left: 0;
@@ -170,27 +170,27 @@
         }
 
         .preloader-logo {
-            font-size: 7rem;
+            font-size: 7.5rem;
             font-weight: 900;
-            letter-spacing: 20px;
-            background: linear-gradient(90deg, #9900ff, #d900ff, #9900ff, #d900ff);
-            background-size: 300% 100%;
+            letter-spacing: 25px;
+            background: linear-gradient(90deg, #9900ff, #d900ff, #9900ff, #d900ff, #9900ff);
+            background-size: 400% 100%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             margin-bottom: 2rem;
-            animation: logoShine 3s linear infinite;
-            filter: drop-shadow(0 0 30px rgba(153, 0, 255, 0.3));
+            animation: logoShine 2s linear infinite;
+            filter: drop-shadow(0 0 50px rgba(153, 0, 255, 0.4));
         }
         @keyframes logoShine {
-            0% { background-position: -300% 0; }
-            100% { background-position: 300% 0; }
+            0% { background-position: 0% 0; }
+            100% { background-position: 400% 0; }
         }
 
         .preloader-ring-container {
             position: relative;
-            width: 100px;
-            height: 100px;
+            width: 120px;
+            height: 120px;
             margin-bottom: 2rem;
         }
 
@@ -201,30 +201,33 @@
             animation: ringSpin 1.5s cubic-bezier(0.5, 0, 0.5, 1) infinite;
         }
         .preloader-ring:nth-child(1) {
-            width: 100px;
-            height: 100px;
+            width: 120px;
+            height: 120px;
             border-top-color: #9900ff;
             border-right-color: #d900ff;
-            animation-duration: 1.5s;
+            animation-duration: 1.2s;
+            filter: drop-shadow(0 0 20px rgba(153, 0, 255, 0.5));
         }
         .preloader-ring:nth-child(2) {
-            width: 70px;
-            height: 70px;
-            top: 15px;
-            left: 15px;
+            width: 85px;
+            height: 85px;
+            top: 17.5px;
+            left: 17.5px;
             border-bottom-color: #d900ff;
             border-left-color: #9900ff;
-            animation-duration: 1.2s;
+            animation-duration: 0.9s;
             animation-direction: reverse;
+            filter: drop-shadow(0 0 15px rgba(217, 0, 255, 0.4));
         }
         .preloader-ring:nth-child(3) {
-            width: 40px;
-            height: 40px;
-            top: 30px;
-            left: 30px;
+            width: 50px;
+            height: 50px;
+            top: 35px;
+            left: 35px;
             border-top-color: #6600cc;
             border-right-color: #b300ff;
-            animation-duration: 1s;
+            animation-duration: 0.7s;
+            filter: drop-shadow(0 0 10px rgba(102, 0, 204, 0.3));
         }
         @keyframes ringSpin {
             0% { transform: rotate(0deg); }
@@ -232,56 +235,65 @@
         }
 
         .loader-bar {
-            width: 350px;
-            height: 3px;
-            background: #1a1a1a;
+            width: 380px;
+            height: 4px;
+            background: #1a0a20;
             position: relative;
             overflow: hidden;
             border-radius: 4px;
-            box-shadow: 0 0 40px rgba(0,0,0,0.9);
+            box-shadow: 0 0 40px rgba(153, 0, 255, 0.1);
         }
         .loader-progress {
             position: absolute;
             top: 0; left: 0;
             height: 100%;
             width: 0%;
-            background: linear-gradient(90deg, #9900ff, #d900ff, #6600cc, #9900ff);
-            background-size: 300% 100%;
-            animation: load 3s ease-in-out forwards, shimmer 2s linear infinite;
+            background: linear-gradient(90deg, #6600cc, #9900ff, #d900ff, #9900ff, #6600cc);
+            background-size: 400% 100%;
+            animation: load 2.8s ease-in-out forwards, shimmer 1.5s linear infinite;
             border-radius: 4px;
+            box-shadow: 0 0 30px rgba(153, 0, 255, 0.3);
         }
         @keyframes load {
             0% { width: 0%; }
-            25% { width: 20%; }
-            50% { width: 50%; }
-            75% { width: 80%; }
+            15% { width: 12%; }
+            30% { width: 28%; }
+            50% { width: 48%; }
+            70% { width: 72%; }
+            85% { width: 88%; }
             100% { width: 100%; }
         }
         @keyframes shimmer {
-            0% { background-position: -300% 0; }
-            100% { background-position: 300% 0; }
+            0% { background-position: -400% 0; }
+            100% { background-position: 400% 0; }
         }
 
         .loader-text {
             margin-top: 1.5rem;
-            font-size: 0.8rem;
-            color: var(--secondary);
-            letter-spacing: 6px;
-            animation: pulse-text 2s ease-in-out infinite;
+            font-size: 0.85rem;
+            color: #9900ff;
+            letter-spacing: 8px;
+            animation: pulse-text 1.8s ease-in-out infinite;
+            text-shadow: 0 0 30px rgba(153, 0, 255, 0.2);
         }
         @keyframes pulse-text {
-            0%, 100% { opacity: 0.2; }
-            50% { opacity: 1; }
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.02); }
         }
 
         .loader-percent {
             margin-top: 0.5rem;
-            font-size: 1.2rem;
+            font-size: 1.4rem;
             font-weight: 300;
-            color: #9900ff;
-            letter-spacing: 2px;
+            color: #d900ff;
+            letter-spacing: 3px;
             font-variant-numeric: tabular-nums;
-            text-shadow: 0 0 20px rgba(153, 0, 255, 0.3);
+            text-shadow: 0 0 30px rgba(217, 0, 255, 0.3);
+            animation: pulsePercent 1.5s ease-in-out infinite;
+        }
+        @keyframes pulsePercent {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
         }
 
         /* ===== CHAT ===== */
@@ -638,6 +650,15 @@
             color: #44eeff;
             background: rgba(0, 212, 255, 0.1);
         }
+        /* ===== НОВАЯ КНОПКА ПОДДЕРЖКИ ===== */
+        .bottom-link.support {
+            color: #d900ff;
+        }
+        .bottom-link.support:hover {
+            color: #9900ff;
+            background: rgba(153, 0, 255, 0.15);
+            box-shadow: 0 0 20px rgba(153, 0, 255, 0.2);
+        }
 
         /* ===== MAIN INTERFACE ===== */
         .interface {
@@ -945,11 +966,11 @@
                 transform: translateX(0);
             }
             .preloader-logo {
-                font-size: 4rem;
-                letter-spacing: 10px;
+                font-size: 4.5rem;
+                letter-spacing: 12px;
             }
             .loader-bar {
-                width: 250px;
+                width: 280px;
             }
             .glow-orb {
                 display: none;
@@ -1000,6 +1021,20 @@
                 padding-left: 1.2rem;
             }
         }
+        @media (max-width: 500px) {
+            .bottom-links {
+                gap: 0.4rem;
+                padding: 0.4rem 0.6rem;
+            }
+            .bottom-link {
+                font-size: 0.55rem;
+                padding: 0.15rem 0.4rem;
+                gap: 4px;
+            }
+            .bottom-link i {
+                font-size: 0.7rem;
+            }
+        }
     </style>
 </head>
 <body data-theme="black">
@@ -1013,7 +1048,7 @@
     <canvas id="canvas-bg"></canvas>
     <div class="noise"></div>
 
-    <!-- PRELOADER -->
+    <!-- PRELOADER (УЛУЧШЕННЫЙ) -->
     <div class="preloader" id="preloader">
         <div class="preloader-logo">ONYX</div>
         <div class="preloader-ring-container">
@@ -1066,13 +1101,16 @@
         </div>
     </div>
 
-    <!-- BOTTOM LINKS -->
+    <!-- BOTTOM LINKS (ДОБАВЛЕНА ПОДДЕРЖКА) -->
     <div class="bottom-links">
         <a href="https://t.me/ramotss" target="_blank" class="bottom-link reviews">
             <i class="fas fa-star"></i> Отзывы
         </a>
         <a href="https://t.me/akuma1n" target="_blank" class="bottom-link channel">
-            <i class="fas fa-telegram-plane"></i> Telegram канал
+            <i class="fas fa-telegram-plane"></i> Канал
+        </a>
+        <a href="https://t.me/ianchikexe" target="_blank" class="bottom-link support">
+            <i class="fas fa-headset"></i> Поддержка
         </a>
     </div>
 
@@ -1287,10 +1325,10 @@
             }
         });
 
-        // ===== PRELOADER =====
+        // ===== PRELOADER (УЛУЧШЕННЫЙ) =====
         let progress = 0;
         const interval = setInterval(() => {
-            progress += Math.random() * 3 + 1;
+            progress += Math.random() * 4 + 2;
             if (progress >= 100) {
                 progress = 100;
                 clearInterval(interval);
@@ -1302,7 +1340,7 @@
                 }, 500);
             }
             loaderPercent.textContent = Math.floor(progress) + '%';
-        }, 80);
+        }, 70);
 
         // ===== FUNCTIONS =====
         function updatePrice() {
@@ -1355,8 +1393,9 @@
             window.open('https://t.me/remagebot', '_blank');
         });
 
+        // Поддержка (старая кнопка)
         document.getElementById('support-btn').addEventListener('click', () => {
-            window.open('https://t.me/apatiyav', '_blank');
+            window.open('https://t.me/ianchikexe', '_blank');
         });
 
         // ===== CANVAS BACKGROUND =====

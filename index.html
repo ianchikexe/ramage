@@ -5,7 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ONYX // SYSTEM</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' style='stop-color:%236600cc'/><stop offset='50%25' style='stop-color:%239900ff'/><stop offset='100%25' style='stop-color:%23d900ff'/></linearGradient><style>@keyframes p{0%25{opacity:0.6;transform:scale(0.92)}50%25{opacity:1;transform:scale(1.08)}100%25{opacity:0.6;transform:scale(0.92)}}</style></defs><rect width='100' height='100' rx='24' fill='%23000000'/><rect width='100' height='100' rx='24' fill='url(%23g)' opacity='0.15'/><rect x='5' y='5' width='90' height='90' rx='19' fill='none' stroke='url(%23g)' stroke-width='1.5' opacity='0.3'><animate attributeName='opacity' values='0.2;0.5;0.2' dur='2.5s' repeatCount='indefinite'/></rect><text x='50' y='70' text-anchor='middle' font-size='52' font-weight='900' fill='url(%23g)' font-family='Arial'><animate attributeName='opacity' values='0.5;1;0.5' dur='1.8s' repeatCount='indefinite'/><animateTransform attributeName='transform' type='scale' values='0.88;1.06;0.88' dur='1.8s' repeatCount='indefinite' additive='sum'/>O</text></svg>">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #000000;
+            --primary: #ffffff;
+            --secondary: #888888;
+            --accent: #ffffff;
+            --glass: rgba(10, 10, 10, 0.6);
+            --border: rgba(255, 255, 255, 0.08);
+            --glow: 0 0 20px rgba(255, 255, 255, 0.1);
+            --support-color: #00d4ff;
+            --shadow: 0 20px 50px rgba(0,0,0,0.5);
+            --success: #00ff88;
+            --warning: #ffaa00;
+            --danger: #ff3355;
+            --chat-bg: rgba(5, 0, 15, 0.88);
+            --question-bg: rgba(255,255,255,0.04);
+            --purple: #9900ff;
+            --purple-light: #d900ff;
+            --purple-dark: #6600cc;
         }
 
         [data-theme="neon"] {
@@ -44,6 +63,7 @@
             position: relative;
         }
 
+        /* ===== ЖИВЫЕ ОБОИ (ОСНОВНОЙ ФОН) ===== */
         #canvas-bg {
             position: absolute;
             top: 0;
@@ -51,6 +71,7 @@
             width: 100%;
             height: 100%;
             z-index: 0;
+            pointer-events: none;
         }
 
         .noise {
@@ -64,56 +85,64 @@
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
         }
 
-        /* ===== 3D LIVE WALLPAPER ===== */
+        /* ===== 3D ЖИВЫЕ ОБОИ (ПЛАВАЮЩИЕ ШАРЫ) ===== */
         .glow-orb {
             position: fixed;
             border-radius: 50%;
-            filter: blur(100px);
+            filter: blur(120px);
             pointer-events: none;
             z-index: 0;
-            opacity: 0.5;
-            animation: orbFloat 25s ease-in-out infinite;
+            opacity: 0.6;
+            animation: orbFloat 30s ease-in-out infinite;
         }
         .glow-orb:nth-child(1) {
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(153, 0, 255, 0.5), transparent);
-            top: -200px;
-            left: -200px;
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(153, 0, 255, 0.4), transparent);
+            top: -250px;
+            left: -250px;
             animation-delay: 0s;
         }
         .glow-orb:nth-child(2) {
-            width: 700px;
-            height: 700px;
-            background: radial-gradient(circle, rgba(217, 0, 255, 0.4), transparent);
-            bottom: -250px;
-            right: -250px;
-            animation-delay: -8s;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(217, 0, 255, 0.35), transparent);
+            bottom: -300px;
+            right: -300px;
+            animation-delay: -10s;
         }
         .glow-orb:nth-child(3) {
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(102, 0, 204, 0.35), transparent);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(102, 0, 204, 0.3), transparent);
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            animation-delay: -16s;
+            animation-delay: -20s;
         }
         .glow-orb:nth-child(4) {
-            width: 450px;
-            height: 450px;
-            background: radial-gradient(circle, rgba(180, 0, 255, 0.3), transparent);
-            top: 20%;
-            right: 10%;
-            animation-delay: -4s;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(180, 0, 255, 0.25), transparent);
+            top: 15%;
+            right: 5%;
+            animation-delay: -6s;
         }
         .glow-orb:nth-child(5) {
-            width: 550px;
-            height: 550px;
-            background: radial-gradient(circle, rgba(120, 0, 255, 0.25), transparent);
-            bottom: 25%;
-            left: 10%;
-            animation-delay: -12s;
+            width: 650px;
+            height: 650px;
+            background: radial-gradient(circle, rgba(120, 0, 255, 0.2), transparent);
+            bottom: 20%;
+            left: 5%;
+            animation-delay: -14s;
+        }
+        .glow-orb:nth-child(6) {
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, rgba(200, 100, 255, 0.15), transparent);
+            top: 60%;
+            right: 30%;
+            animation-delay: -8s;
         }
 
         @keyframes orbFloat {
@@ -121,13 +150,13 @@
                 transform: translate(0, 0) scale(1) rotate(0deg); 
             }
             25% { 
-                transform: translate(90px, -60px) scale(1.18) rotate(6deg); 
+                transform: translate(120px, -80px) scale(1.2) rotate(8deg); 
             }
             50% { 
-                transform: translate(-50px, 70px) scale(0.82) rotate(-4deg); 
+                transform: translate(-70px, 90px) scale(0.8) rotate(-5deg); 
             }
             75% { 
-                transform: translate(60px, -40px) scale(1.1) rotate(3deg); 
+                transform: translate(80px, -50px) scale(1.15) rotate(4deg); 
             }
         }
 
@@ -162,7 +191,7 @@
             background-clip: text;
             margin-bottom: 2rem;
             animation: logoShine 1.8s linear infinite;
-            filter: drop-shadow(0 0 60px rgba(153, 0, 255, 0.5));
+            filter: drop-shadow(0 0 80px rgba(153, 0, 255, 0.5));
         }
         @keyframes logoShine {
             0% { background-position: 0% 0; }
@@ -188,7 +217,7 @@
             border-top-color: #9900ff;
             border-right-color: #d900ff;
             animation-duration: 1.4s;
-            filter: drop-shadow(0 0 30px rgba(153, 0, 255, 0.6));
+            filter: drop-shadow(0 0 40px rgba(153, 0, 255, 0.6));
         }
         .preloader-ring:nth-child(2) {
             width: 100px;
@@ -199,7 +228,7 @@
             border-left-color: #9900ff;
             animation-duration: 1s;
             animation-direction: reverse;
-            filter: drop-shadow(0 0 20px rgba(217, 0, 255, 0.5));
+            filter: drop-shadow(0 0 30px rgba(217, 0, 255, 0.5));
         }
         .preloader-ring:nth-child(3) {
             width: 60px;
@@ -209,7 +238,7 @@
             border-top-color: #6600cc;
             border-right-color: #b300ff;
             animation-duration: 0.7s;
-            filter: drop-shadow(0 0 15px rgba(102, 0, 204, 0.4));
+            filter: drop-shadow(0 0 20px rgba(102, 0, 204, 0.4));
         }
         @keyframes ringSpin {
             0% { transform: rotate(0deg); }
@@ -223,7 +252,7 @@
             position: relative;
             overflow: hidden;
             border-radius: 4px;
-            box-shadow: 0 0 50px rgba(153, 0, 255, 0.15), inset 0 0 20px rgba(153, 0, 255, 0.05);
+            box-shadow: 0 0 60px rgba(153, 0, 255, 0.15), inset 0 0 30px rgba(153, 0, 255, 0.05);
         }
         .loader-progress {
             position: absolute;
@@ -234,7 +263,7 @@
             background-size: 500% 100%;
             animation: load 3s ease-in-out forwards, shimmer 1.2s linear infinite;
             border-radius: 4px;
-            box-shadow: 0 0 40px rgba(153, 0, 255, 0.4);
+            box-shadow: 0 0 50px rgba(153, 0, 255, 0.4);
         }
         @keyframes load {
             0% { width: 0%; }
@@ -258,7 +287,7 @@
             color: #9900ff;
             letter-spacing: 10px;
             animation: pulse-text 1.6s ease-in-out infinite;
-            text-shadow: 0 0 40px rgba(153, 0, 255, 0.3);
+            text-shadow: 0 0 50px rgba(153, 0, 255, 0.3);
             font-weight: 300;
         }
         @keyframes pulse-text {
@@ -273,7 +302,7 @@
             color: #d900ff;
             letter-spacing: 4px;
             font-variant-numeric: tabular-nums;
-            text-shadow: 0 0 40px rgba(217, 0, 255, 0.4);
+            text-shadow: 0 0 50px rgba(217, 0, 255, 0.4);
             animation: pulsePercent 1.2s ease-in-out infinite;
         }
         @keyframes pulsePercent {
@@ -287,45 +316,45 @@
             bottom: 2rem;
             right: 2rem;
             z-index: 50;
-            width: 65px;
-            height: 65px;
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
             background: linear-gradient(135deg, #6600cc, #9900ff, #d900ff);
-            border: none;
+            border: 2px solid rgba(255,255,255,0.06);
             color: #fff;
-            font-size: 1.8rem;
+            font-size: 2rem;
             cursor: pointer;
-            box-shadow: 0 0 30px rgba(153, 0, 255, 0.4);
-            transition: 0.3s;
+            box-shadow: 0 0 50px rgba(153, 0, 255, 0.4);
+            transition: 0.4s;
             display: flex;
             align-items: center;
             justify-content: center;
-            animation: chatPulse 2s ease-in-out infinite;
+            animation: chatPulse 2.5s ease-in-out infinite;
         }
         .chat-toggle:hover {
-            transform: scale(1.1) rotate(10deg);
-            box-shadow: 0 0 50px rgba(153, 0, 255, 0.6);
+            transform: scale(1.12) rotate(12deg);
+            box-shadow: 0 0 80px rgba(153, 0, 255, 0.6);
         }
         .chat-toggle i {
-            filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
+            filter: drop-shadow(0 0 20px rgba(255,255,255,0.2));
         }
         @keyframes chatPulse {
-            0%, 100% { box-shadow: 0 0 30px rgba(153, 0, 255, 0.4); }
-            50% { box-shadow: 0 0 60px rgba(153, 0, 255, 0.7); }
+            0%, 100% { box-shadow: 0 0 50px rgba(153, 0, 255, 0.4); }
+            50% { box-shadow: 0 0 90px rgba(153, 0, 255, 0.7); }
         }
 
         .chat-window {
             position: fixed;
-            bottom: 6rem;
+            bottom: 6.5rem;
             right: 2rem;
             z-index: 50;
-            width: 420px;
-            height: 520px;
+            width: 440px;
+            height: 540px;
             background: var(--chat-bg);
             border: 1px solid rgba(153, 0, 255, 0.15);
-            border-radius: 24px;
+            border-radius: 28px;
             backdrop-filter: blur(30px);
-            box-shadow: 0 30px 80px rgba(0,0,0,0.8), 0 0 60px rgba(153, 0, 255, 0.05);
+            box-shadow: 0 30px 90px rgba(0,0,0,0.9), 0 0 80px rgba(153, 0, 255, 0.05);
             display: none;
             flex-direction: column;
             overflow: hidden;
@@ -334,6 +363,7 @@
         .chat-window.active {
             display: flex;
         }
+        /* Живые обои в чате */
         .chat-window::before {
             content: '';
             position: absolute;
@@ -342,16 +372,17 @@
             width: 100%;
             height: 100%;
             background: 
-                radial-gradient(ellipse at 20% 30%, rgba(153, 0, 255, 0.08), transparent 50%),
-                radial-gradient(ellipse at 80% 70%, rgba(217, 0, 255, 0.06), transparent 50%),
-                radial-gradient(ellipse at 50% 50%, rgba(102, 0, 204, 0.04), transparent 60%);
+                radial-gradient(ellipse at 20% 30%, rgba(153, 0, 255, 0.12), transparent 50%),
+                radial-gradient(ellipse at 80% 70%, rgba(217, 0, 255, 0.08), transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(102, 0, 204, 0.06), transparent 60%),
+                radial-gradient(ellipse at 70% 20%, rgba(200, 100, 255, 0.05), transparent 40%);
             pointer-events: none;
             z-index: 0;
-            animation: chatBgFloat 10s ease-in-out infinite;
+            animation: chatBgFloat 12s ease-in-out infinite;
         }
         @keyframes chatBgFloat {
             0%, 100% { opacity: 0.7; transform: scale(1) rotate(0deg); }
-            50% { opacity: 1; transform: scale(1.03) rotate(1deg); }
+            50% { opacity: 1; transform: scale(1.04) rotate(1.5deg); }
         }
         .chat-window > * {
             position: relative;
@@ -384,24 +415,24 @@
             gap: 14px;
         }
         .chat-avatar {
-            width: 44px;
-            height: 44px;
+            width: 46px;
+            height: 46px;
             border-radius: 50%;
             background: linear-gradient(135deg, #6600cc, #9900ff, #d900ff);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             font-weight: 900;
             color: #fff;
             animation: avatarGlow 2.5s ease-in-out infinite;
             text-shadow: 0 0 30px rgba(255,255,255,0.3);
             flex-shrink: 0;
-            box-shadow: 0 0 30px rgba(153, 0, 255, 0.2);
+            box-shadow: 0 0 40px rgba(153, 0, 255, 0.2);
         }
         @keyframes avatarGlow {
-            0%, 100% { box-shadow: 0 0 25px rgba(153, 0, 255, 0.4); }
-            50% { box-shadow: 0 0 50px rgba(153, 0, 255, 0.8); }
+            0%, 100% { box-shadow: 0 0 30px rgba(153, 0, 255, 0.4); }
+            50% { box-shadow: 0 0 60px rgba(153, 0, 255, 0.8); }
         }
         .chat-header-text h4 {
             font-size: 1rem;
@@ -426,8 +457,8 @@
             background: rgba(255,255,255,0.03);
             border: 1px solid rgba(255,255,255,0.05);
             color: var(--secondary);
-            width: 34px;
-            height: 34px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             font-size: 1rem;
             cursor: pointer;
@@ -488,7 +519,7 @@
             align-self: flex-end;
             background: linear-gradient(135deg, #6600cc, #9900ff);
             color: #fff;
-            box-shadow: 0 4px 25px rgba(153, 0, 255, 0.25);
+            box-shadow: 0 4px 30px rgba(153, 0, 255, 0.25);
             border-radius: 18px 18px 4px 18px;
         }
         .message.bot {
@@ -529,7 +560,7 @@
             height: 6px;
             background: #d900ff;
             border-radius: 50%;
-            box-shadow: 0 0 10px rgba(217, 0, 255, 0.3);
+            box-shadow: 0 0 15px rgba(217, 0, 255, 0.3);
         }
 
         .message.bot .link-btn {
@@ -548,7 +579,7 @@
         .message.bot .link-btn:hover {
             background: #d900ff;
             color: #fff;
-            box-shadow: 0 0 30px rgba(217, 0, 255, 0.3);
+            box-shadow: 0 0 40px rgba(217, 0, 255, 0.3);
         }
 
         .message.bot .feature-item {
@@ -598,7 +629,7 @@
             color: #d900ff;
             transform: scale(1.03);
             background: rgba(153, 0, 255, 0.08);
-            box-shadow: 0 0 30px rgba(153, 0, 255, 0.1);
+            box-shadow: 0 0 40px rgba(153, 0, 255, 0.1);
         }
 
         .chat-input-area {
@@ -619,7 +650,7 @@
             padding: 0.6rem 1.8rem;
             border-radius: 50px;
             border: 1px solid rgba(153, 0, 255, 0.06);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            box-shadow: 0 10px 50px rgba(0,0,0,0.6);
             animation: fadeUp 1s ease 0.5s both;
         }
         @keyframes fadeUp {
@@ -677,7 +708,7 @@
         .bottom-link.support:hover {
             color: #9900ff;
             background: rgba(153, 0, 255, 0.12);
-            box-shadow: 0 0 30px rgba(153, 0, 255, 0.15);
+            box-shadow: 0 0 40px rgba(153, 0, 255, 0.15);
         }
 
         /* ===== MAIN INTERFACE ===== */
@@ -728,7 +759,7 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: rgba(153, 0, 255, 0.08);
+            background: rgba(153, 0, 255, 0.1);
             padding: 6px 16px;
             border-radius: 50px;
             border: 1px solid rgba(153, 0, 255, 0.15);
@@ -742,7 +773,7 @@
             height: 6px;
             background: var(--success);
             border-radius: 50%;
-            box-shadow: 0 0 15px var(--success);
+            box-shadow: 0 0 20px var(--success);
             animation: pulse-dot 2s infinite;
         }
         @keyframes pulse-dot {
@@ -770,7 +801,7 @@
             top: -50%; left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(153, 0, 255, 0.06) 0%, transparent 60%);
+            background: radial-gradient(circle, rgba(153, 0, 255, 0.08) 0%, transparent 60%);
             opacity: 0.5;
             pointer-events: none;
             animation: glow-rotate 25s linear infinite;
@@ -821,7 +852,7 @@
             background: rgba(0,0,0,0.4);
             border: 1px solid rgba(255,255,255,0.05);
             color: var(--secondary);
-            width: 42px; height: 42px;
+            width: 44px; height: 44px;
             border-radius: 50%;
             display: flex;
             justify-content: center;
@@ -834,7 +865,7 @@
         .icon-btn:hover {
             background: linear-gradient(135deg, #6600cc, #9900ff);
             color: #fff;
-            box-shadow: 0 0 30px rgba(153, 0, 255, 0.4);
+            box-shadow: 0 0 40px rgba(153, 0, 255, 0.4);
             border-color: rgba(153, 0, 255, 0.3);
             transform: scale(1.08) rotate(8deg);
         }
@@ -856,7 +887,7 @@
             background: rgba(153, 0, 255, 0.08);
             border-color: rgba(153, 0, 255, 0.2);
             transform: scale(1.02);
-            box-shadow: 0 0 40px rgba(153, 0, 255, 0.1);
+            box-shadow: 0 0 50px rgba(153, 0, 255, 0.1);
         }
         .price-tag .price {
             font-size: 2.2rem;
@@ -884,7 +915,7 @@
             transition: 0.3s;
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            box-shadow: 0 0 40px rgba(153, 0, 255, 0.25);
+            box-shadow: 0 0 50px rgba(153, 0, 255, 0.25);
         }
         .action-btn::after {
             content: '';
@@ -902,7 +933,7 @@
         }
         .action-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 50px rgba(153, 0, 255, 0.4);
+            box-shadow: 0 10px 60px rgba(153, 0, 255, 0.4);
         }
 
         .emulator-btn {
@@ -928,7 +959,7 @@
             color: #fff;
             border-color: rgba(153, 0, 255, 0.3);
             transform: translateY(-2px) scale(1.02);
-            box-shadow: 0 0 40px rgba(153, 0, 255, 0.2);
+            box-shadow: 0 0 50px rgba(153, 0, 255, 0.2);
         }
 
         .support-btn {
@@ -951,7 +982,7 @@
         .support-btn:hover {
             background: var(--support-color);
             color: #000;
-            box-shadow: 0 0 30px var(--support-color);
+            box-shadow: 0 0 40px var(--support-color);
             transform: translateY(-2px) scale(1.02);
         }
         [data-theme="neon"] .support-btn:hover {
@@ -983,7 +1014,7 @@
                 gap: 0.5rem;
             }
             .icon-btn {
-                width: 36px; height: 36px;
+                width: 38px; height: 38px;
                 font-size: 0.75rem;
             }
             .price-tag .price {
@@ -1014,9 +1045,9 @@
             .chat-toggle {
                 bottom: 1.5rem;
                 right: 1.5rem;
-                width: 55px;
-                height: 55px;
-                font-size: 1.5rem;
+                width: 60px;
+                height: 60px;
+                font-size: 1.6rem;
             }
             .quick-questions {
                 padding: 0.5rem 0.8rem;
@@ -1077,12 +1108,18 @@
             .chat-messages {
                 padding: 0.8rem 1.2rem;
             }
+            .chat-avatar {
+                width: 36px;
+                height: 36px;
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
 <body data-theme="black">
 
-    <!-- 3D LIVE WALLPAPER -->
+    <!-- ЖИВЫЕ ОБОИ (ОСНОВНЫЕ) -->
+    <div class="glow-orb"></div>
     <div class="glow-orb"></div>
     <div class="glow-orb"></div>
     <div class="glow-orb"></div>
@@ -1091,7 +1128,7 @@
     <canvas id="canvas-bg"></canvas>
     <div class="noise"></div>
 
-    <!-- PRELOADER (ФИОЛЕТОВЫЙ ФОН) -->
+    <!-- PRELOADER -->
     <div class="preloader" id="preloader">
         <div class="preloader-logo">ONYX</div>
         <div class="preloader-ring-container">
@@ -1440,7 +1477,7 @@
             window.open('https://t.me/ianchikexe', '_blank');
         });
 
-        // ===== CANVAS BACKGROUND =====
+        // ===== ЖИВЫЕ ОБОИ (CANVAS С ЧАСТИЦАМИ) =====
         const canvas = document.getElementById('canvas-bg');
         const ctx = canvas.getContext('2d');
         let w, h;
@@ -1466,16 +1503,16 @@
             reset() {
                 this.x = Math.random() * w;
                 this.y = Math.random() * h;
-                this.z = Math.random() * 0.5 + 0.2;
-                this.size = Math.random() * 2.5 + 0.5;
-                this.opacity = Math.random() * 0.4 + 0.1;
-                this.vx = (Math.random() - 0.5) * 0.2;
-                this.vy = (Math.random() - 0.5) * 0.2;
+                this.z = Math.random() * 0.8 + 0.2;
+                this.size = Math.random() * 3 + 0.5;
+                this.opacity = Math.random() * 0.5 + 0.05;
+                this.vx = (Math.random() - 0.5) * 0.3;
+                this.vy = (Math.random() - 0.5) * 0.3;
                 this.phase = Math.random() * Math.PI * 2;
-                this.phaseSpeed = Math.random() * 0.02 + 0.01;
+                this.phaseSpeed = Math.random() * 0.02 + 0.005;
                 this.orbit = Math.random() * Math.PI * 2;
-                this.orbitSpeed = Math.random() * 0.005 + 0.002;
-                this.orbitRadius = Math.random() * 50 + 20;
+                this.orbitSpeed = Math.random() * 0.008 + 0.002;
+                this.orbitRadius = Math.random() * 60 + 20;
                 this.centerX = this.x;
                 this.centerY = this.y;
                 this.hue = 270 + Math.random() * 60;
@@ -1485,30 +1522,44 @@
                 const dy = mouseY - this.y;
                 const dist = Math.sqrt(dx * dx + dy * dy);
                 if (dist < 200) {
-                    const force = (200 - dist) / 200 * 0.03;
+                    const force = (200 - dist) / 200 * 0.04;
                     this.x += (dx / dist) * force;
                     this.y += (dy / dist) * force;
                 }
                 this.phase += this.phaseSpeed;
                 this.orbit += this.orbitSpeed;
-                this.x += Math.sin(this.phase) * 0.1 + Math.cos(this.orbit) * 0.05;
-                this.y += Math.cos(this.phase) * 0.1 + Math.sin(this.orbit) * 0.05;
+                this.x += Math.sin(this.phase) * 0.15 + Math.cos(this.orbit) * 0.08;
+                this.y += Math.cos(this.phase) * 0.15 + Math.sin(this.orbit) * 0.08;
                 if (this.x < 0 || this.x > w) this.vx *= -1;
                 if (this.y < 0 || this.y > h) this.vy *= -1;
                 this.x += this.vx;
                 this.y += this.vy;
             }
             draw() {
-                ctx.fillStyle = theme === 'neon' 
-                    ? `rgba(217, 0, 255, ${this.opacity})` 
-                    : `rgba(153, 0, 255, ${this.opacity})`;
+                const gradient = ctx.createRadialGradient(
+                    this.x, this.y, 0,
+                    this.x, this.y, this.size * 2
+                );
+                const color = theme === 'neon' ? '217, 0, 255' : '153, 0, 255';
+                gradient.addColorStop(0, `rgba(${color}, ${this.opacity * 0.8})`);
+                gradient.addColorStop(1, `rgba(${color}, 0)`);
+                ctx.fillStyle = gradient;
                 ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.arc(this.x, this.y, this.size * 2, 0, Math.PI * 2);
                 ctx.fill();
+                
+                // Ядро частицы
+                ctx.fillStyle = `rgba(${color}, ${this.opacity * 0.6})`;
+                ctx.shadowColor = `rgba(${color}, ${this.opacity * 0.3})`;
+                ctx.shadowBlur = this.size * 4;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size * 0.6, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.shadowBlur = 0;
             }
         }
 
-        for(let i=0; i<250; i++) particles.push(new Particle());
+        for(let i=0; i<300; i++) particles.push(new Particle());
 
         let gridOffset = 0;
         let time = 0;
@@ -1517,12 +1568,13 @@
             time += 0.01;
             ctx.clearRect(0, 0, w, h);
             
+            // Сетка
             ctx.strokeStyle = theme === 'neon' 
-                ? `rgba(217, 0, 255, ${0.06 + Math.sin(time) * 0.02})` 
-                : `rgba(153, 0, 255, ${0.05 + Math.sin(time) * 0.015})`;
-            ctx.lineWidth = 1;
+                ? `rgba(217, 0, 255, ${0.04 + Math.sin(time) * 0.015})` 
+                : `rgba(153, 0, 255, ${0.035 + Math.sin(time) * 0.01})`;
+            ctx.lineWidth = 0.5;
             
-            gridOffset = (gridOffset + 0.3) % 50;
+            gridOffset = (gridOffset + 0.2) % 50;
             
             for (let x = 0; x <= w; x += 80) {
                 ctx.beginPath();
@@ -1543,17 +1595,18 @@
                 p.draw();
             });
 
+            // Соединительные линии
             for (let i = 0; i < particles.length; i++) {
                 for (let j = i + 1; j < particles.length; j++) {
                     const dx = particles[i].x - particles[j].x;
                     const dy = particles[i].y - particles[j].y;
                     const dist = Math.sqrt(dx * dx + dy * dy);
                     if (dist < 120) {
-                        const alpha = 0.04 * (1 - dist / 120);
+                        const alpha = 0.035 * (1 - dist / 120);
                         ctx.strokeStyle = theme === 'neon' 
                             ? `rgba(217, 0, 255, ${alpha})` 
                             : `rgba(153, 0, 255, ${alpha})`;
-                        ctx.lineWidth = 0.5;
+                        ctx.lineWidth = 0.4;
                         ctx.beginPath();
                         ctx.moveTo(particles[i].x, particles[i].y);
                         ctx.lineTo(particles[j].x, particles[j].y);
@@ -1562,14 +1615,16 @@
                 }
             }
 
-            for (let i = 0; i < 3; i++) {
-                const x = w * (0.2 + 0.3 * Math.sin(time * 0.2 + i * 2));
-                const y = h * (0.2 + 0.3 * Math.cos(time * 0.15 + i * 1.5));
-                const gradient = ctx.createRadialGradient(x, y, 0, x, y, 300);
-                gradient.addColorStop(0, theme === 'neon' ? 'rgba(217, 0, 255, 0.04)' : 'rgba(153, 0, 255, 0.03)');
+            // Дополнительные светящиеся пятна
+            for (let i = 0; i < 4; i++) {
+                const x = w * (0.15 + 0.35 * Math.sin(time * 0.15 + i * 1.8));
+                const y = h * (0.15 + 0.35 * Math.cos(time * 0.12 + i * 1.3));
+                const gradient = ctx.createRadialGradient(x, y, 0, x, y, 350);
+                const color = theme === 'neon' ? '217, 0, 255' : '153, 0, 255';
+                gradient.addColorStop(0, `rgba(${color}, ${0.025 + Math.sin(time + i) * 0.01})`);
                 gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
                 ctx.fillStyle = gradient;
-                ctx.fillRect(x - 300, y - 300, 600, 600);
+                ctx.fillRect(x - 350, y - 350, 700, 700);
             }
 
             requestAnimationFrame(animate);

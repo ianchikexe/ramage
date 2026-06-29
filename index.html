@@ -1,278 +1,1705 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Мать Оникса — Кликер</title>
+    <title>ONYX // SYSTEM</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' style='stop-color:%236600cc'/><stop offset='50%25' style='stop-color:%239900ff'/><stop offset='100%25' style='stop-color:%23d900ff'/></linearGradient><style>@keyframes p{0%25{opacity:0.6;transform:scale(0.92)}50%25{opacity:1;transform:scale(1.08)}100%25{opacity:0.6;transform:scale(0.92)}}</style></defs><rect width='100' height='100' rx='24' fill='%23000000'/><rect width='100' height='100' rx='24' fill='url(%23g)' opacity='0.15'/><rect x='5' y='5' width='90' height='90' rx='19' fill='none' stroke='url(%23g)' stroke-width='1.5' opacity='0.3'><animate attributeName='opacity' values='0.2;0.5;0.2' dur='2.5s' repeatCount='indefinite'/></rect><text x='50' y='70' text-anchor='middle' font-size='52' font-weight='900' fill='url(%23g)' font-family='Arial'><animate attributeName='opacity' values='0.5;1;0.5' dur='1.8s' repeatCount='indefinite'/><animateTransform attributeName='transform' type='scale' values='0.88;1.06;0.88' dur='1.8s' repeatCount='indefinite' additive='sum'/>O</text></svg>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --bg-color: #000000;
+            --primary: #ffffff;
+            --secondary: #888888;
+            --accent: #ffffff;
+            --glass: rgba(10, 10, 10, 0.6);
+            --border: rgba(255, 255, 255, 0.08);
+            --glow: 0 0 20px rgba(255, 255, 255, 0.1);
+            --support-color: #00d4ff;
+            --shadow: 0 20px 50px rgba(0,0,0,0.5);
+            --success: #00ff88;
+            --warning: #ffaa00;
+            --danger: #ff3355;
+            --chat-bg: rgba(5, 0, 15, 0.88);
+            --question-bg: rgba(255,255,255,0.04);
+            --purple: #9900ff;
+            --purple-light: #d900ff;
+            --purple-dark: #6600cc;
+        }
+
+        [data-theme="neon"] {
+            --bg-color: #05000a;
+            --primary: #e0e0e0;
+            --secondary: #a080b0;
+            --accent: #d900ff;
+            --glass: rgba(10, 0, 20, 0.7);
+            --border: rgba(217, 0, 255, 0.25);
+            --glow: 0 0 30px rgba(217, 0, 255, 0.3);
+            --support-color: #ff6bff;
+            --shadow: 0 20px 50px rgba(217, 0, 255, 0.2);
+            --chat-bg: rgba(5, 0, 15, 0.9);
+            --question-bg: rgba(217, 0, 255, 0.08);
+            --purple: #9900ff;
+            --purple-light: #d900ff;
+            --purple-dark: #6600cc;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            user-select: none;
+            font-family: 'Segoe UI', Roboto, sans-serif;
         }
 
         body {
-            background: #0b0b0b;
-            min-height: 100vh;
+            background-color: var(--bg-color);
+            color: var(--primary);
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-family: 'Impact', 'Arial Black', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            padding: 20px;
+            position: relative;
         }
 
-        .container {
-            max-width: 800px;
+        /* ===== ЖИВЫЕ ОБОИ (ОСНОВНОЙ ФОН) ===== */
+        #canvas-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            background: radial-gradient(circle at 30% 20%, #1f0505, #0a0a0a);
-            border: 6px solid #aa0000;
-            border-radius: 50px 10px 50px 10px;
-            padding: 40px 25px;
-            box-shadow: 0 0 80px rgba(200, 0, 0, 0.6), inset 0 0 40px #3d0000;
-            text-align: center;
-            transition: 0.2s;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
         }
 
-        h1 {
-            font-size: 3.8rem;
-            color: #ffcc00;
-            text-shadow: 0 0 30px #ff8800, 0 0 60px #ff2200, 0 5px 0 #6a2a00;
-            word-break: break-word;
-            line-height: 1.2;
+        .noise {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.02;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
         }
 
-        .sub {
-            font-size: 2.2rem;
-            color: #ff4444;
-            text-shadow: 0 0 30px #ff0000, 0 0 70px #aa0000;
-            background: rgba(0,0,0,0.8);
-            padding: 10px 20px;
-            border-left: 6px solid #ffcc00;
-            border-right: 6px solid #ffcc00;
-            display: inline-block;
-            margin: 15px 0 25px;
-            letter-spacing: 6px;
+        /* ===== 3D ЖИВЫЕ ОБОИ (ПЛАВАЮЩИЕ ШАРЫ) ===== */
+        .glow-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.6;
+            animation: orbFloat 30s ease-in-out infinite;
+        }
+        .glow-orb:nth-child(1) {
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(153, 0, 255, 0.4), transparent);
+            top: -250px;
+            left: -250px;
+            animation-delay: 0s;
+        }
+        .glow-orb:nth-child(2) {
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(217, 0, 255, 0.35), transparent);
+            bottom: -300px;
+            right: -300px;
+            animation-delay: -10s;
+        }
+        .glow-orb:nth-child(3) {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(102, 0, 204, 0.3), transparent);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: -20s;
+        }
+        .glow-orb:nth-child(4) {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(180, 0, 255, 0.25), transparent);
+            top: 15%;
+            right: 5%;
+            animation-delay: -6s;
+        }
+        .glow-orb:nth-child(5) {
+            width: 650px;
+            height: 650px;
+            background: radial-gradient(circle, rgba(120, 0, 255, 0.2), transparent);
+            bottom: 20%;
+            left: 5%;
+            animation-delay: -14s;
+        }
+        .glow-orb:nth-child(6) {
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, rgba(200, 100, 255, 0.15), transparent);
+            top: 60%;
+            right: 30%;
+            animation-delay: -8s;
         }
 
-        .counter-box {
-            background: #1a0a0a;
-            border: 4px solid #cc3300;
-            border-radius: 100px;
-            padding: 20px 15px;
-            margin: 20px 0;
-            box-shadow: inset 0 0 60px #661100, 0 0 40px #cc3300;
+        @keyframes orbFloat {
+            0%, 100% { 
+                transform: translate(0, 0) scale(1) rotate(0deg); 
+            }
+            25% { 
+                transform: translate(120px, -80px) scale(1.2) rotate(8deg); 
+            }
+            50% { 
+                transform: translate(-70px, 90px) scale(0.8) rotate(-5deg); 
+            }
+            75% { 
+                transform: translate(80px, -50px) scale(1.15) rotate(4deg); 
+            }
         }
 
-        .counter-label {
-            font-size: 1.8rem;
-            color: #ffaa55;
-            letter-spacing: 4px;
+        /* ===== PRELOADER (ФИОЛЕТОВЫЙ ФОН) ===== */
+        .preloader {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, #0a0015 0%, #000000 100%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1s ease, visibility 1s ease;
+        }
+        .preloader.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
         }
 
-        .counter-number {
-            font-size: 6rem;
+        .preloader-logo {
+            font-size: 8rem;
             font-weight: 900;
-            color: #ffdd44;
-            text-shadow: 0 0 40px #ff9900, 0 0 80px #ff3300;
-            line-height: 1.2;
-            font-family: 'Courier New', monospace;
-            background: #0f0500;
-            padding: 0 20px;
-            border-radius: 60px;
-            display: inline-block;
-            margin: 10px 0;
-            min-width: 200px;
+            letter-spacing: 30px;
+            background: linear-gradient(90deg, #6600cc, #9900ff, #d900ff, #9900ff, #6600cc);
+            background-size: 500% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 2rem;
+            animation: logoShine 1.8s linear infinite;
+            filter: drop-shadow(0 0 80px rgba(153, 0, 255, 0.5));
+        }
+        @keyframes logoShine {
+            0% { background-position: 0% 0; }
+            100% { background-position: 500% 0; }
         }
 
-        .click-btn {
-            background: radial-gradient(circle at 30% 30%, #ff5500, #aa2200);
-            border: none;
-            border-bottom: 8px solid #661100;
-            color: #fff;
-            font-size: 3rem;
-            font-weight: bold;
-            text-shadow: 0 3px 0 #441100, 0 0 30px #ff8800;
-            padding: 25px 40px;
-            border-radius: 80px;
-            cursor: pointer;
-            transition: 0.08s linear;
-            width: 100%;
-            max-width: 450px;
-            margin: 15px auto;
-            text-transform: uppercase;
-            letter-spacing: 6px;
-            box-shadow: 0 0 60px #ff3300;
+        .preloader-ring-container {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            margin-bottom: 2rem;
         }
 
-        .click-btn:active {
-            transform: scale(0.94);
-            border-bottom-width: 3px;
-            background: radial-gradient(circle at 30% 30%, #ff3300, #881100);
+        .preloader-ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            animation: ringSpin 1.8s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+        }
+        .preloader-ring:nth-child(1) {
+            width: 140px;
+            height: 140px;
+            border-top-color: #9900ff;
+            border-right-color: #d900ff;
+            animation-duration: 1.4s;
+            filter: drop-shadow(0 0 40px rgba(153, 0, 255, 0.6));
+        }
+        .preloader-ring:nth-child(2) {
+            width: 100px;
+            height: 100px;
+            top: 20px;
+            left: 20px;
+            border-bottom-color: #d900ff;
+            border-left-color: #9900ff;
+            animation-duration: 1s;
+            animation-direction: reverse;
+            filter: drop-shadow(0 0 30px rgba(217, 0, 255, 0.5));
+        }
+        .preloader-ring:nth-child(3) {
+            width: 60px;
+            height: 60px;
+            top: 40px;
+            left: 40px;
+            border-top-color: #6600cc;
+            border-right-color: #b300ff;
+            animation-duration: 0.7s;
+            filter: drop-shadow(0 0 20px rgba(102, 0, 204, 0.4));
+        }
+        @keyframes ringSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
-        .click-btn:hover {
-            box-shadow: 0 0 100px #ff5500, 0 0 200px #ff0000;
+        .loader-bar {
+            width: 420px;
+            height: 4px;
+            background: #1a0a25;
+            position: relative;
+            overflow: hidden;
+            border-radius: 4px;
+            box-shadow: 0 0 60px rgba(153, 0, 255, 0.15), inset 0 0 30px rgba(153, 0, 255, 0.05);
+        }
+        .loader-progress {
+            position: absolute;
+            top: 0; left: 0;
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #6600cc, #9900ff, #d900ff, #9900ff, #6600cc);
+            background-size: 500% 100%;
+            animation: load 3s ease-in-out forwards, shimmer 1.2s linear infinite;
+            border-radius: 4px;
+            box-shadow: 0 0 50px rgba(153, 0, 255, 0.4);
+        }
+        @keyframes load {
+            0% { width: 0%; }
+            12% { width: 10%; }
+            25% { width: 22%; }
+            40% { width: 38%; }
+            55% { width: 52%; }
+            70% { width: 68%; }
+            82% { width: 82%; }
+            92% { width: 94%; }
+            100% { width: 100%; }
+        }
+        @keyframes shimmer {
+            0% { background-position: -500% 0; }
+            100% { background-position: 500% 0; }
         }
 
-        .juice-line {
-            font-size: 2rem;
-            color: #ff9933;
-            background: #1f0a00;
-            padding: 15px;
-            border-radius: 50px;
-            border: 2px solid #ff7700;
-            margin: 25px 0 15px;
+        .loader-text {
+            margin-top: 1.8rem;
+            font-size: 0.9rem;
+            color: #9900ff;
+            letter-spacing: 10px;
+            animation: pulse-text 1.6s ease-in-out infinite;
+            text-shadow: 0 0 50px rgba(153, 0, 255, 0.3);
+            font-weight: 300;
+        }
+        @keyframes pulse-text {
+            0%, 100% { opacity: 0.25; transform: scale(1); letter-spacing: 10px; }
+            50% { opacity: 1; transform: scale(1.03); letter-spacing: 12px; }
+        }
+
+        .loader-percent {
+            margin-top: 0.5rem;
+            font-size: 1.6rem;
+            font-weight: 200;
+            color: #d900ff;
             letter-spacing: 4px;
-            font-family: 'Courier New', monospace;
+            font-variant-numeric: tabular-nums;
+            text-shadow: 0 0 50px rgba(217, 0, 255, 0.4);
+            animation: pulsePercent 1.2s ease-in-out infinite;
+        }
+        @keyframes pulsePercent {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
         }
 
-        .tg-link {
-            display: inline-block;
-            background: #1f2a3a;
-            border: 3px solid #28a8ea;
-            border-radius: 60px;
-            padding: 18px 40px;
-            font-size: 2rem;
+        /* ===== CHAT ===== */
+        .chat-toggle {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 50;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6600cc, #9900ff, #d900ff);
+            border: 2px solid rgba(255,255,255,0.06);
             color: #fff;
-            text-decoration: none;
-            font-weight: bold;
-            letter-spacing: 3px;
-            box-shadow: 0 0 40px #0088cc;
-            transition: 0.2s;
-            margin-top: 20px;
-            text-transform: none;
+            font-size: 2rem;
+            cursor: pointer;
+            box-shadow: 0 0 50px rgba(153, 0, 255, 0.4);
+            transition: 0.4s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: chatPulse 2.5s ease-in-out infinite;
+        }
+        .chat-toggle:hover {
+            transform: scale(1.12) rotate(12deg);
+            box-shadow: 0 0 80px rgba(153, 0, 255, 0.6);
+        }
+        .chat-toggle i {
+            filter: drop-shadow(0 0 20px rgba(255,255,255,0.2));
+        }
+        @keyframes chatPulse {
+            0%, 100% { box-shadow: 0 0 50px rgba(153, 0, 255, 0.4); }
+            50% { box-shadow: 0 0 90px rgba(153, 0, 255, 0.7); }
         }
 
-        .tg-link:hover {
-            background: #28a8ea;
-            color: #0b0b0b;
-            box-shadow: 0 0 80px #00aaff, 0 0 150px #0066ff;
+        .chat-window {
+            position: fixed;
+            bottom: 6.5rem;
+            right: 2rem;
+            z-index: 50;
+            width: 440px;
+            height: 580px;
+            background: var(--chat-bg);
+            border: 1px solid rgba(153, 0, 255, 0.15);
+            border-radius: 28px;
+            backdrop-filter: blur(30px);
+            box-shadow: 0 30px 90px rgba(0,0,0,0.9), 0 0 80px rgba(153, 0, 255, 0.05);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            animation: slideUp 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .chat-window.active {
+            display: flex;
+        }
+        /* Живые обои в чате */
+        .chat-window::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse at 20% 30%, rgba(153, 0, 255, 0.12), transparent 50%),
+                radial-gradient(ellipse at 80% 70%, rgba(217, 0, 255, 0.08), transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(102, 0, 204, 0.06), transparent 60%),
+                radial-gradient(ellipse at 70% 20%, rgba(200, 100, 255, 0.05), transparent 40%);
+            pointer-events: none;
+            z-index: 0;
+            animation: chatBgFloat 12s ease-in-out infinite;
+        }
+        @keyframes chatBgFloat {
+            0%, 100% { opacity: 0.7; transform: scale(1) rotate(0deg); }
+            50% { opacity: 1; transform: scale(1.04) rotate(1.5deg); }
+        }
+        .chat-window > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.92);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .chat-header {
+            padding: 1.2rem 1.8rem;
+            background: rgba(10, 0, 20, 0.5);
+            border-bottom: 1px solid rgba(153, 0, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+        .chat-header-info {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .chat-avatar {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6600cc, #9900ff, #d900ff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: #fff;
+            animation: avatarGlow 2.5s ease-in-out infinite;
+            text-shadow: 0 0 30px rgba(255,255,255,0.3);
+            flex-shrink: 0;
+            box-shadow: 0 0 40px rgba(153, 0, 255, 0.2);
+        }
+        @keyframes avatarGlow {
+            0%, 100% { box-shadow: 0 0 30px rgba(153, 0, 255, 0.4); }
+            50% { box-shadow: 0 0 60px rgba(153, 0, 255, 0.8); }
+        }
+        .chat-header-text h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: 0.5px;
+        }
+        .chat-header-text h4 span {
+            color: #9900ff;
+        }
+        .chat-header-text .status {
+            font-size: 0.65rem;
+            color: var(--success);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .chat-header-text .status i {
+            font-size: 0.4rem;
+        }
+        .chat-close {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.05);
+            color: var(--secondary);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .chat-close:hover {
+            color: #d900ff;
+            border-color: rgba(153, 0, 255, 0.2);
+            background: rgba(153, 0, 255, 0.05);
+            transform: rotate(90deg);
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1.2rem 1.8rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            min-height: 0;
+            background: transparent;
+            max-height: 280px;
+        }
+        .chat-messages::-webkit-scrollbar {
+            width: 4px;
+        }
+        .chat-messages::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: rgba(153, 0, 255, 0.3);
+            border-radius: 4px;
+        }
+
+        .message {
+            max-width: 88%;
+            padding: 0.8rem 1.2rem;
+            border-radius: 16px;
+            font-size: 0.85rem;
+            line-height: 1.7;
+            animation: messageIn 0.35s ease;
+            word-wrap: break-word;
+            flex-shrink: 0;
+        }
+        @keyframes messageIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px) scale(0.94);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        .message.user {
+            align-self: flex-end;
+            background: linear-gradient(135deg, #6600cc, #9900ff);
+            color: #fff;
+            box-shadow: 0 4px 30px rgba(153, 0, 255, 0.25);
+            border-radius: 18px 18px 4px 18px;
+        }
+        .message.bot {
+            align-self: flex-start;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.06);
+            color: var(--primary);
+            border-radius: 18px 18px 18px 4px;
+        }
+
+        .message.bot .bot-name {
+            font-size: 0.6rem;
+            color: #d900ff;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            letter-spacing: 0.5px;
+        }
+        .message.bot .bot-name i {
+            font-size: 0.4rem;
+            color: var(--success);
+        }
+
+        .message.bot .step {
+            display: block;
+            padding: 0.25rem 0 0.25rem 1.5rem;
+            position: relative;
+            color: var(--secondary);
+        }
+        .message.bot .step::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.6rem;
+            width: 6px;
+            height: 6px;
+            background: #d900ff;
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(217, 0, 255, 0.3);
+        }
+
+        .message.bot .link-btn {
+            display: inline-block;
+            margin-top: 0.6rem;
+            padding: 0.4rem 1.2rem;
+            background: rgba(153, 0, 255, 0.12);
+            border: 1px solid rgba(153, 0, 255, 0.2);
+            border-radius: 20px;
+            color: #d900ff;
+            text-decoration: none;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        .message.bot .link-btn:hover {
+            background: #d900ff;
+            color: #fff;
+            box-shadow: 0 0 40px rgba(217, 0, 255, 0.3);
+        }
+
+        .message.bot .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0.2rem 0;
+            color: var(--secondary);
+        }
+        .message.bot .feature-item .fi-icon {
+            color: #d900ff;
+            width: 18px;
+            text-align: center;
+        }
+
+        /* ===== QUICK QUESTIONS ===== */
+        .quick-questions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            padding: 0.6rem 1.2rem 0.8rem 1.2rem;
+            border-top: 1px solid rgba(153, 0, 255, 0.08);
+            flex-shrink: 0;
+        }
+        .quick-q {
+            padding: 0.5rem 0.3rem;
+            background: var(--question-bg);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 14px;
+            font-size: 0.6rem;
+            font-weight: 600;
+            color: var(--secondary);
+            cursor: pointer;
+            transition: 0.3s;
+            text-align: center;
+            white-space: normal;
+            word-wrap: break-word;
+            line-height: 1.3;
+            min-height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+        .quick-q:hover {
+            border-color: rgba(153, 0, 255, 0.3);
+            color: #d900ff;
+            transform: scale(1.03);
+            background: rgba(153, 0, 255, 0.08);
+            box-shadow: 0 0 40px rgba(153, 0, 255, 0.1);
+        }
+
+        /* ===== YOUTUBE ПЛЕЕР ===== */
+        .youtube-player {
+            padding: 0.5rem 1.2rem 1rem 1.2rem;
+            border-top: 1px solid rgba(153, 0, 255, 0.08);
+            flex-shrink: 0;
+            background: rgba(0,0,0,0.2);
+        }
+        .youtube-player iframe {
+            width: 100%;
+            border-radius: 14px;
+            border: 1px solid rgba(153, 0, 255, 0.1);
+            background: #000;
+            aspect-ratio: 16/9;
+        }
+
+        .chat-input-area {
+            display: none;
+        }
+
+        /* ===== BOTTOM LINKS ===== */
+        .bottom-links {
+            position: fixed;
+            bottom: 1.8rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 15;
+            display: flex;
+            gap: 0.8rem;
+            background: var(--glass);
+            backdrop-filter: blur(25px);
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            border: 1px solid rgba(153, 0, 255, 0.06);
+            box-shadow: 0 10px 50px rgba(0,0,0,0.6);
+            animation: fadeUp 1s ease 0.5s both;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(25px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0) scale(1);
+            }
+        }
+        .bottom-link {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--secondary);
+            text-decoration: none;
+            font-size: 0.7rem;
+            font-weight: 600;
+            transition: 0.3s;
+            padding: 0.25rem 0.6rem;
+            border-radius: 20px;
+            white-space: nowrap;
+        }
+        .bottom-link i {
+            font-size: 0.8rem;
+            transition: 0.3s;
+        }
+        .bottom-link:hover {
+            color: #d900ff;
+            background: rgba(153, 0, 255, 0.08);
             transform: scale(1.05);
         }
-
-        .footer-meta {
-            margin-top: 35px;
-            font-size: 1.3rem;
-            color: #777;
-            border-top: 2px solid #440000;
-            padding-top: 20px;
-            font-family: Arial, sans-serif;
-            text-transform: none;
-            letter-spacing: 1px;
+        .bottom-link:hover i {
+            transform: scale(1.2);
+        }
+        .bottom-link.reviews {
+            color: #ffaa00;
+        }
+        .bottom-link.reviews:hover {
+            color: #ffcc44;
+            background: rgba(255, 170, 0, 0.08);
+        }
+        .bottom-link.channel {
+            color: #00d4ff;
+        }
+        .bottom-link.channel:hover {
+            color: #44eeff;
+            background: rgba(0, 212, 255, 0.08);
+        }
+        .bottom-link.support {
+            color: #d900ff;
+        }
+        .bottom-link.support:hover {
+            color: #9900ff;
+            background: rgba(153, 0, 255, 0.12);
+            box-shadow: 0 0 40px rgba(153, 0, 255, 0.15);
+        }
+        .bottom-link.youtube {
+            color: #ff0033;
+        }
+        .bottom-link.youtube:hover {
+            color: #ff4466;
+            background: rgba(255, 0, 51, 0.08);
         }
 
-        .footer-meta strong {
-            color: #ff5555;
-            text-shadow: 0 0 20px #ff0000;
+        /* ===== MAIN INTERFACE ===== */
+        .interface {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 920px;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+            opacity: 0;
+            transform: scale(0.94) translateY(15px);
+            transition: all 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
+            margin-bottom: 2rem;
+        }
+        .interface.visible {
+            opacity: 1;
+            transform: scale(1) translateY(0);
         }
 
-        @media (max-width: 600px) {
-            h1 { font-size: 2.8rem; }
-            .sub { font-size: 1.6rem; }
-            .counter-number { font-size: 4.2rem; }
-            .click-btn { font-size: 2.2rem; padding: 18px 20px; }
-            .tg-link { font-size: 1.5rem; padding: 14px 25px; }
+        .info-panel {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        .big-title {
+            font-size: 5.2rem;
+            font-weight: 900;
+            line-height: 0.9;
+            letter-spacing: -3px;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            background: linear-gradient(to right, #6600cc, #9900ff, #d900ff, #9900ff, #6600cc);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: titleShine 4s linear infinite;
+        }
+        @keyframes titleShine {
+            0% { background-position: -300% 0; }
+            100% { background-position: 300% 0; }
+        }
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(153, 0, 255, 0.1);
+            padding: 6px 16px;
+            border-radius: 50px;
+            border: 1px solid rgba(153, 0, 255, 0.15);
+            font-size: 0.75rem;
+            color: #9900ff;
+            margin-bottom: 1.5rem;
+            backdrop-filter: blur(5px);
+        }
+        .dot {
+            width: 6px;
+            height: 6px;
+            background: var(--success);
+            border-radius: 50%;
+            box-shadow: 0 0 20px var(--success);
+            animation: pulse-dot 2s infinite;
+        }
+        @keyframes pulse-dot {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.7); }
+            100% { opacity: 1; transform: scale(1); }
         }
 
-        /* анимация соков */
-        .splash {
+        .card-panel {
+            background: var(--glass);
+            border: 1px solid rgba(153, 0, 255, 0.06);
+            border-radius: 28px;
+            padding: 2.8rem;
+            backdrop-filter: blur(25px);
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+        .card-panel::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(153, 0, 255, 0.08) 0%, transparent 60%);
+            opacity: 0.5;
+            pointer-events: none;
+            animation: glow-rotate 25s linear infinite;
+        }
+        @keyframes glow-rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .features-list {
+            list-style: none;
+            margin: 1.5rem 0;
+        }
+        .features-list li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+            color: var(--secondary);
+            font-size: 0.85rem;
+            transition: 0.3s;
+            cursor: default;
+        }
+        .features-list li:hover {
+            color: var(--primary);
+            transform: translateX(5px);
+        }
+        .features-list li i {
+            color: #9900ff;
+            width: 20px;
+            transition: 0.3s;
+            font-size: 0.85rem;
+        }
+        .features-list li:hover i {
+            transform: scale(1.2) rotate(5deg);
+            color: #d900ff;
+        }
+
+        .top-controls {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            display: flex;
+            gap: 0.8rem;
+            z-index: 20;
+        }
+        .icon-btn {
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.05);
+            color: var(--secondary);
+            width: 44px; height: 44px;
+            border-radius: 50%;
             display: flex;
             justify-content: center;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin: 15px 0;
+            align-items: center;
+            cursor: pointer;
+            transition: 0.3s;
+            backdrop-filter: blur(5px);
+            font-size: 0.9rem;
         }
-        .splash span {
-            font-size: 2.5rem;
-            filter: drop-shadow(0 0 20px #ff8800);
+        .icon-btn:hover {
+            background: linear-gradient(135deg, #6600cc, #9900ff);
+            color: #fff;
+            box-shadow: 0 0 40px rgba(153, 0, 255, 0.4);
+            border-color: rgba(153, 0, 255, 0.3);
+            transform: scale(1.08) rotate(8deg);
+        }
+
+        .price-tag {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 1rem;
+            padding: 10px;
+            background: rgba(153, 0, 255, 0.04);
+            border-radius: 14px;
+            border: 1px solid rgba(153, 0, 255, 0.08);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .price-tag:hover {
+            background: rgba(153, 0, 255, 0.08);
+            border-color: rgba(153, 0, 255, 0.2);
+            transform: scale(1.02);
+            box-shadow: 0 0 50px rgba(153, 0, 255, 0.1);
+        }
+        .price-tag .price {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: #d900ff;
+        }
+        .price-tag .currency {
+            font-size: 1.2rem;
+            color: var(--secondary);
+            min-width: 40px;
+        }
+
+        .action-btn {
+            width: 100%;
+            padding: 1.2rem;
+            background: linear-gradient(135deg, #6600cc, #9900ff, #d900ff);
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            font-weight: 800;
+            font-size: 1.1rem;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            box-shadow: 0 0 50px rgba(153, 0, 255, 0.25);
+        }
+        .action-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg) translateX(-100%);
+            transition: 0.6s;
+        }
+        .action-btn:hover::after {
+            transform: rotate(45deg) translateX(100%);
+        }
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 60px rgba(153, 0, 255, 0.4);
+        }
+
+        .emulator-btn {
+            width: 100%;
+            padding: 0.8rem;
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            letter-spacing: 0.5px;
+        }
+        .emulator-btn:hover {
+            background: linear-gradient(135deg, #6600cc, #9900ff);
+            color: #fff;
+            border-color: rgba(153, 0, 255, 0.3);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 0 50px rgba(153, 0, 255, 0.2);
+        }
+
+        .support-btn {
+            width: 100%;
+            padding: 0.7rem;
+            background: transparent;
+            color: var(--support-color);
+            border: 1px solid var(--support-color);
+            border-radius: 14px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .support-btn:hover {
+            background: var(--support-color);
+            color: #000;
+            box-shadow: 0 0 40px var(--support-color);
+            transform: translateY(-2px) scale(1.02);
+        }
+        [data-theme="neon"] .support-btn:hover {
+            background: var(--support-color);
+            color: #fff;
+        }
+
+        @media (max-width: 900px) {
+            .interface {
+                grid-template-columns: 1fr;
+                text-align: center;
+                padding: 1rem;
+                margin-bottom: 4.5rem;
+                gap: 1.5rem;
+            }
+            .info-panel {
+                align-items: center;
+                margin-bottom: 0.5rem;
+            }
+            .big-title {
+                font-size: 3.8rem;
+            }
+            .card-panel {
+                padding: 1.8rem;
+            }
+            .top-controls {
+                top: 1rem;
+                right: 1rem;
+                gap: 0.5rem;
+            }
+            .icon-btn {
+                width: 38px; height: 38px;
+                font-size: 0.75rem;
+            }
+            .price-tag .price {
+                font-size: 1.8rem;
+            }
+            .features-list li {
+                font-size: 0.8rem;
+            }
+            .features-list li:hover {
+                transform: translateX(0);
+            }
+            .preloader-logo {
+                font-size: 5rem;
+                letter-spacing: 15px;
+            }
+            .loader-bar {
+                width: 300px;
+            }
+            .glow-orb {
+                display: none;
+            }
+            .chat-window {
+                width: 95%;
+                right: 2.5%;
+                bottom: 5.5rem;
+                height: 520px;
+            }
+            .chat-toggle {
+                bottom: 1.5rem;
+                right: 1.5rem;
+                width: 60px;
+                height: 60px;
+                font-size: 1.6rem;
+            }
+            .quick-questions {
+                padding: 0.4rem 0.6rem;
+                gap: 0.3rem;
+                grid-template-columns: 1fr 1fr;
+            }
+            .quick-q {
+                font-size: 0.5rem;
+                padding: 0.3rem 0.2rem;
+                min-height: 28px;
+            }
+            .bottom-links {
+                bottom: 0.8rem;
+                padding: 0.4rem 0.8rem;
+                gap: 0.4rem;
+                flex-wrap: wrap;
+                justify-content: center;
+                border-radius: 30px;
+                width: 95%;
+            }
+            .bottom-link {
+                font-size: 0.55rem;
+                padding: 0.2rem 0.4rem;
+                white-space: nowrap;
+                gap: 4px;
+            }
+            .bottom-link i {
+                font-size: 0.65rem;
+            }
+            .message {
+                font-size: 0.78rem;
+                padding: 0.6rem 1rem;
+                max-width: 95%;
+            }
+            .message.bot .step {
+                padding-left: 1.2rem;
+            }
+            .youtube-player {
+                padding: 0.3rem 0.8rem 0.6rem 0.8rem;
+            }
+            .chat-messages {
+                max-height: 200px;
+                padding: 0.8rem 1rem;
+            }
+        }
+        @media (max-width: 500px) {
+            .bottom-links {
+                gap: 0.2rem;
+                padding: 0.25rem 0.5rem;
+                border-radius: 20px;
+            }
+            .bottom-link {
+                font-size: 0.45rem;
+                padding: 0.12rem 0.3rem;
+                gap: 3px;
+            }
+            .bottom-link i {
+                font-size: 0.5rem;
+            }
+            .big-title {
+                font-size: 2.8rem;
+                letter-spacing: -1px;
+            }
+            .chat-window {
+                height: 460px;
+            }
+            .chat-header {
+                padding: 0.8rem 1.2rem;
+            }
+            .chat-messages {
+                padding: 0.6rem 0.8rem;
+                max-height: 160px;
+            }
+            .chat-avatar {
+                width: 36px;
+                height: 36px;
+                font-size: 1rem;
+            }
+            .youtube-player {
+                padding: 0.2rem 0.5rem 0.4rem 0.5rem;
+            }
+            .quick-questions {
+                padding: 0.3rem 0.5rem;
+                gap: 0.2rem;
+            }
+            .quick-q {
+                font-size: 0.45rem;
+                padding: 0.2rem 0.15rem;
+                min-height: 24px;
+                border-radius: 10px;
+            }
         }
     </style>
 </head>
-<body>
+<body data-theme="black">
 
-<div class="container">
+    <!-- ЖИВЫЕ ОБОИ (ОСНОВНЫЕ) -->
+    <div class="glow-orb"></div>
+    <div class="glow-orb"></div>
+    <div class="glow-orb"></div>
+    <div class="glow-orb"></div>
+    <div class="glow-orb"></div>
+    <div class="glow-orb"></div>
+    <canvas id="canvas-bg"></canvas>
+    <div class="noise"></div>
 
-    <h1>МАТЬ ОНИКСА</h1>
-    <div class="sub">ШЛЮХА</div>
-
-    <!-- Счётчик кликов -->
-    <div class="counter-box">
-        <div class="counter-label">⚡ РАЗ ЕБАЛИ ⚡</div>
-        <div class="counter-number" id="clickCounter">0</div>
-        <div style="font-size: 1.3rem; color: #cc8844; margin-top: 5px;">(нажми на кнопку, чтобы добавить)</div>
+    <!-- PRELOADER -->
+    <div class="preloader" id="preloader">
+        <div class="preloader-logo">ONYX</div>
+        <div class="preloader-ring-container">
+            <div class="preloader-ring"></div>
+            <div class="preloader-ring"></div>
+            <div class="preloader-ring"></div>
+        </div>
+        <div class="loader-bar">
+            <div class="loader-progress"></div>
+        </div>
+        <div class="loader-text">ЗАГРУЗКА СИСТЕМЫ</div>
+        <div class="loader-percent" id="loaderPercent">0%</div>
     </div>
 
-    <!-- Кнопка кликера -->
-    <button class="click-btn" id="clickBtn">🍆 ЕБАТЬ</button>
+    <!-- CHAT -->
+    <button class="chat-toggle" id="chatToggle" title="ONYX GPT">
+        <i class="fas fa-comment-dots"></i>
+    </button>
 
-    <!-- Соковая тема -->
-    <div class="juice-line">
-        🧃 СОКИ-СОКИ-СОКИ 🧃
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header">
+            <div class="chat-header-info">
+                <div class="chat-avatar">⚡</div>
+                <div class="chat-header-text">
+                    <h4>ONYX <span>GPT</span></h4>
+                    <span class="status"><i class="fas fa-circle"></i> онлайн</span>
+                </div>
+            </div>
+            <button class="chat-close" id="chatClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="message bot">
+                <div class="bot-name">⚡ ONYX GPT <i class="fas fa-circle"></i></div>
+                Привет! Я ONYX GPT. Выбери один из вопросов ниже, чтобы узнать больше! 🚀
+            </div>
+        </div>
+        <div class="quick-questions" id="quickQuestions">
+            <button class="quick-q" data-question="функции">📋 Функции ONYX</button>
+            <button class="quick-q" data-question="hyper-v">🛑 Hyper-V</button>
+            <button class="quick-q" data-question="bluestacks">🗑️ Удаление Bluestacks</button>
+            <button class="quick-q" data-question="optimization">⚙️ Оптимизация</button>
+        </div>
+        
+        <!-- YOUTUBE ПЛЕЕР -->
+        <div class="youtube-player">
+            <iframe src="https://www.youtube.com/embed/etUva-Bnlxk" 
+                    title="YouTube video player" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    referrerpolicy="strict-origin-when-cross-origin" 
+                    allowfullscreen>
+            </iframe>
+        </div>
+        
+        <div class="chat-input-area">
+            <input type="text" class="chat-input" id="chatInput" placeholder="Спроси что-нибудь..." disabled>
+            <button class="chat-send" id="chatSend" disabled>
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
     </div>
-    <div class="splash">
-        <span>🍊</span><span>🍋</span><span>🍇</span><span>🍓</span><span>🍉</span><span>🥤</span><span>🧃</span>
+
+    <!-- BOTTOM LINKS (ВСЕ КНОПКИ НА МЕСТЕ) -->
+    <div class="bottom-links">
+        <a href="https://t.me/ramotss" target="_blank" class="bottom-link reviews">
+            <i class="fas fa-star"></i> Отзывы
+        </a>
+        <a href="https://t.me/akuma1n" target="_blank" class="bottom-link channel">
+            <i class="fas fa-telegram-plane"></i> Канал
+        </a>
+        <a href="https://t.me/ianchikexe" target="_blank" class="bottom-link support">
+            <i class="fas fa-headset"></i> Поддержка
+        </a>
+        <a href="https://www.youtube.com/watch?v=etUva-Bnlxk" target="_blank" class="bottom-link youtube">
+            <i class="fab fa-youtube"></i> Видео
+        </a>
     </div>
 
-    <!-- Твоя ссылка на Telegram -->
-    <a href="https://t.me/ianchik_exe" target="_blank" class="tg-link">
-        ✈️ T.me/ianchik_exe
-    </a>
-
-    <!-- Метка SWILL -->
-    <div class="footer-meta">
-        <strong>[SWILL-01-ACTIVE]</strong> &nbsp;|&nbsp; КЛИКЕР АКТИВЕН &nbsp;|&nbsp; 2025
+    <!-- TOP CONTROLS -->
+    <div class="top-controls">
+        <button class="icon-btn" id="lang-toggle" title="Change Language">
+            <i class="fas fa-globe"></i>
+        </button>
+        <button class="icon-btn" id="theme-toggle" title="Switch Theme">
+            <i class="fas fa-adjust"></i>
+        </button>
+        <button class="icon-btn" id="currency-toggle" title="Change Currency">
+            <i class="fas fa-dollar-sign"></i>
+        </button>
     </div>
 
-</div>
+    <!-- MAIN INTERFACE -->
+    <div class="interface" id="ui-layer">
+        
+        <div class="info-panel">
+            <div class="status-badge">
+                <div class="dot"></div>
+                <span id="server-status">ONYX • v3.1</span>
+            </div>
+            <h1 class="big-title">ONYX</h1>
+            <p style="color: var(--secondary); max-width: 400px; line-height: 1.7; font-size: 0.95rem;" id="desc-text">
+                ONYX — лучший эмулятор для ПК с передовыми технологиями и максимальной производительностью.
+            </p>
+        </div>
 
-<script>
-    (function() {
-        // Счётчик
-        let count = 0;
-        const counterEl = document.getElementById('clickCounter');
-        const btn = document.getElementById('clickBtn');
+        <div class="card-panel">
+            <div>
+                <h3 style="margin-bottom: 0.8rem; color: #9900ff; font-weight: 600; letter-spacing: 1px; font-size: 0.9rem;" id="feat-title">ОСОБЕННОСТИ</h3>
+                <ul class="features-list">
+                    <li><i class="fas fa-palette"></i> <span>Кастомный дизайн.</span></li>
+                    <li><i class="fas fa-cogs"></i> <span>Оптимизация конфигов.</span></li>
+                    <li><i class="fas fa-rocket"></i> <span>Анлок фпса по бинду.</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span>Вылетов полностью нету.</span></li>
+                    <li><i class="fas fa-crosshairs"></i> <span>Добавлен прицел (настраиваемый).</span></li>
+                    <li><i class="fas fa-microchip"></i> <span>Улучшен движок и андроид.</span></li>
+                    <li><i class="fas fa-discord"></i> <span>Discord RPC.</span></li>
+                    <li><i class="fas fa-keyboard"></i> <span>Настраиваемые бинды.</span></li>
+                    <li><i class="fas fa-ban"></i> <span>Вырезана реклама полностью.</span></li>
+                    <li><i class="fas fa-download"></i> <span>Удобный автоустановщик.</span></li>
+                    <li><i class="fas fa-shield-alt"></i> <span>Нету синих экранов на Windows 11.</span></li>
+                    <li><i class="fas fa-vk"></i> <span>Можно спокойно входить через ВК.</span></li>
+                </ul>
+            </div>
 
-        // Обновление отображения
-        function updateCounter() {
-            counterEl.textContent = count;
-            // лёгкий визуальный фидбек
-            counterEl.style.transform = 'scale(1.2)';
-            setTimeout(() => { counterEl.style.transform = 'scale(1)'; }, 120);
+            <div>
+                <div class="price-tag" id="price-tag">
+                    <span class="currency" id="currency-symbol">₽</span>
+                    <span class="price" id="price-display">550</span>
+                    <span class="currency" id="currency-code">RUB</span>
+                </div>
+                
+                <button class="action-btn" id="get-btn">
+                    <i class="fas fa-shopping-cart" style="margin-right: 8px;"></i> 
+                    <span id="btn-text">КУПИТЬ ДОСТУП</span>
+                </button>
+
+                <button class="emulator-btn" id="emulator-btn">
+                    <i class="fas fa-gamepad"></i> <span id="emulator-text">БЕСПЛАТНЫЙ ЭМУЛЯТОР RAMPAGE</span>
+                </button>
+
+                <button class="support-btn" id="support-btn">
+                    <i class="fas fa-headset"></i> <span id="support-text">ПОДДЕРЖКА</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== TEXT DATA =====
+        const texts = {
+            ru: {
+                status: "ONYX • v3.1",
+                desc: "ONYX — лучший эмулятор для ПК с передовыми технологиями и максимальной производительностью.",
+                featTitle: "ОСОБЕННОСТИ",
+                btn: "КУПИТЬ ДОСТУП",
+                emulator: "БЕСПЛАТНЫЙ ЭМУЛЯТОР RAMPAGE",
+                support: "ПОДДЕРЖКА",
+                price: "550"
+            },
+            en: {
+                status: "ONYX • v3.1",
+                desc: "ONYX — the best PC emulator with advanced technologies and maximum performance.",
+                featTitle: "FEATURES",
+                btn: "BUY ACCESS",
+                emulator: "FREE EMULATOR RAMPAGE",
+                support: "SUPPORT",
+                price: "550"
+            }
+        };
+
+        const currencies = {
+            RUB: { symbol: "₽", code: "RUB", rate: 1 },
+            USD: { symbol: "$", code: "USD", rate: 0.011 },
+            EUR: { symbol: "€", code: "EUR", rate: 0.010 }
+        };
+
+        // ===== STATE =====
+        let lang = 'ru';
+        let theme = 'black';
+        let currentCurrency = 'RUB';
+        const basePrice = 550;
+
+        // ===== DOM ELEMENTS =====
+        const els = {
+            status: document.getElementById('server-status'),
+            desc: document.getElementById('desc-text'),
+            featTitle: document.getElementById('feat-title'),
+            btn: document.getElementById('btn-text'),
+            price: document.getElementById('price-display'),
+            currencySymbol: document.getElementById('currency-symbol'),
+            currencyCode: document.getElementById('currency-code'),
+            getBtn: document.getElementById('get-btn'),
+            priceTag: document.getElementById('price-tag'),
+            emulatorText: document.getElementById('emulator-text'),
+            supportText: document.getElementById('support-text')
+        };
+
+        const preloader = document.getElementById('preloader');
+        const uiLayer = document.getElementById('ui-layer');
+        const loaderPercent = document.getElementById('loaderPercent');
+
+        // ===== CHAT =====
+        const chatToggle = document.getElementById('chatToggle');
+        const chatWindow = document.getElementById('chatWindow');
+        const chatClose = document.getElementById('chatClose');
+        const chatMessages = document.getElementById('chatMessages');
+        const quickQuestions = document.getElementById('quickQuestions');
+
+        // ===== ONYX GPT KNOWLEDGE BASE =====
+        const knowledgeBase = {
+            'функции': `📋 <b>Функции ONYX</b><br><br>
+                <div class="feature-item"><span class="fi-icon">🎨</span> Кастомный дизайн</div>
+                <div class="feature-item"><span class="fi-icon">⚙️</span> Оптимизация конфигов</div>
+                <div class="feature-item"><span class="fi-icon">🚀</span> Анлок фпса по бинду</div>
+                <div class="feature-item"><span class="fi-icon">✅</span> Вылетов полностью нету</div>
+                <div class="feature-item"><span class="fi-icon">🎯</span> Добавлен прицел (настраиваемый)</div>
+                <div class="feature-item"><span class="fi-icon">💻</span> Улучшен движок и андроид</div>
+                <div class="feature-item"><span class="fi-icon">💬</span> Discord RPC</div>
+                <div class="feature-item"><span class="fi-icon">⌨️</span> Настраиваемые бинды</div>
+                <div class="feature-item"><span class="fi-icon">🚫</span> Вырезана реклама полностью</div>
+                <div class="feature-item"><span class="fi-icon">📥</span> Удобный автоустановщик</div>
+                <div class="feature-item"><span class="fi-icon">🛡️</span> Нету синих экранов на Windows 11</div>
+                <div class="feature-item"><span class="fi-icon">🔑</span> Можно спокойно входить через ВК</div>`,
+            
+            'hyper-v': `🛑 <b>Отключение Hyper-V</b><br><br>
+                <span class="step">1️⃣ Откройте "Панель управления" → "Программы и компоненты" → "Включение или отключение компонентов Windows"</span>
+                <span class="step">2️⃣ Снимите галочку с "Hyper-V"</span>
+                <span class="step">3️⃣ Нажмите "OK" и перезагрузите компьютер</span>
+                <br><a href="https://t.me/onyxfail/5" target="_blank" class="link-btn">📎 Подробная инструкция</a>`,
+            
+            'bluestacks': `🗑️ <b>Удаление старого Bluestacks</b><br><br>
+                <span class="step">1️⃣ Откройте "Панель управления" → "Программы и компоненты"</span>
+                <span class="step">2️⃣ Найдите "BlueStacks" в списке</span>
+                <span class="step">3️⃣ Нажмите "Удалить" и следуйте инструкциям</span>
+                <span class="step">4️⃣ После удаления перезагрузите компьютер</span>
+                <br><a href="https://t.me/onyxfail/7" target="_blank" class="link-btn">📎 Подробная инструкция</a>`,
+            
+            'optimization': `⚙️ <b>Как правильно поставить оптимизацию</b><br><br>
+                <span class="step">1️⃣ Скачайте архив с оптимизацией</span>
+                <span class="step">2️⃣ Распакуйте файлы в папку с ONYX</span>
+                <span class="step">3️⃣ Замените существующие файлы</span>
+                <span class="step">4️⃣ Запустите ONYX и наслаждайтесь производительностью!</span>
+                <br><a href="https://t.me/onyxfail/8" target="_blank" class="link-btn">📎 Полная инструкция</a>`
+        };
+
+        function getBotResponse(input) {
+            const lowerInput = input.toLowerCase();
+            for (const [key, response] of Object.entries(knowledgeBase)) {
+                if (lowerInput.includes(key)) {
+                    return response;
+                }
+            }
+            return '❓ Пожалуйста, выбери один из предложенных вопросов ниже.';
         }
 
-        // Обработчик клика
-        btn.addEventListener('click', function(e) {
-            count++;
-            updateCounter();
+        function addMessage(text, type) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            if (type === 'bot') {
+                messageDiv.innerHTML = `<div class="bot-name">⚡ ONYX GPT <i class="fas fa-circle"></i></div>${text}`;
+            } else {
+                messageDiv.textContent = text;
+            }
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
 
-            // Эффект на кнопке (дополнительный сок)
-            btn.style.boxShadow = '0 0 120px #ffaa00, 0 0 200px #ff4400';
-            setTimeout(() => {
-                btn.style.boxShadow = '0 0 60px #ff3300';
-            }, 150);
-
-            // Можно добавить вибрацию при клике (если нужно)
-            // navigator.vibrate && navigator.vibrate(20);
+        // ===== CHAT EVENTS =====
+        chatToggle.addEventListener('click', () => {
+            chatWindow.classList.toggle('active');
         });
 
-        // Сброс/старт с цифрой 0, но можно задать начальное значение
-        // Если хочешь стартовое число - поменяй count = 69; например
-        // count = 0; // по умолчанию
+        chatClose.addEventListener('click', () => {
+            chatWindow.classList.remove('active');
+        });
 
-        // Инициализация
-        updateCounter();
+        quickQuestions.addEventListener('click', (e) => {
+            const target = e.target.closest('.quick-q');
+            if (target) {
+                const question = target.dataset.question;
+                const text = target.textContent.trim();
+                addMessage(text, 'user');
+                setTimeout(() => {
+                    const response = getBotResponse(question);
+                    addMessage(response, 'bot');
+                }, 400);
+            }
+        });
 
-        // Сохраняем в localStorage? (опционально)
-        // При загрузке можно восстановить:
-        // const saved = localStorage.getItem('onix_mom_counter');
-        // if (saved !== null) { count = parseInt(saved, 10) || 0; updateCounter(); }
-        // window.addEventListener('beforeunload', () => { localStorage.setItem('onix_mom_counter', count); });
-    })();
-</script>
+        // ===== PRELOADER =====
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += Math.random() * 3 + 1.5;
+            if (progress >= 100) {
+                progress = 100;
+                clearInterval(interval);
+                setTimeout(() => {
+                    preloader.classList.add('hidden');
+                    setTimeout(() => {
+                        uiLayer.classList.add('visible');
+                    }, 300);
+                }, 500);
+            }
+            loaderPercent.textContent = Math.floor(progress) + '%';
+        }, 60);
 
+        // ===== FUNCTIONS =====
+        function updatePrice() {
+            const currency = currencies[currentCurrency];
+            const convertedPrice = Math.round(basePrice * currency.rate);
+            els.price.textContent = convertedPrice;
+            els.currencySymbol.textContent = currency.symbol;
+            els.currencyCode.textContent = currency.code;
+        }
+
+        function updateLanguage() {
+            const t = texts[lang];
+            els.status.textContent = t.status;
+            els.desc.textContent = t.desc;
+            els.featTitle.textContent = t.featTitle;
+            els.btn.textContent = t.btn;
+            els.emulatorText.textContent = t.emulator;
+            els.supportText.textContent = t.support;
+        }
+
+        // ===== EVENT LISTENERS =====
+        document.getElementById('lang-toggle').addEventListener('click', () => {
+            lang = lang === 'ru' ? 'en' : 'ru';
+            updateLanguage();
+        });
+
+        document.getElementById('theme-toggle').addEventListener('click', () => {
+            theme = theme === 'black' ? 'neon' : 'black';
+            document.body.setAttribute('data-theme', theme);
+        });
+
+        document.getElementById('currency-toggle').addEventListener('click', () => {
+            const keys = Object.keys(currencies);
+            const currentIndex = keys.indexOf(currentCurrency);
+            const nextIndex = (currentIndex + 1) % keys.length;
+            currentCurrency = keys[nextIndex];
+            updatePrice();
+        });
+
+        // ===== BUTTON ACTIONS =====
+        els.getBtn.addEventListener('click', () => {
+            window.open('https://t.me/onyxsellbot', '_blank');
+        });
+
+        els.priceTag.addEventListener('click', () => {
+            window.open('https://t.me/onyxsellbot', '_blank');
+        });
+
+        document.getElementById('emulator-btn').addEventListener('click', () => {
+            window.open('https://t.me/remagebot', '_blank');
+        });
+
+        document.getElementById('support-btn').addEventListener('click', () => {
+            window.open('https://t.me/ianchikexe', '_blank');
+        });
+
+        // ===== ЖИВЫЕ ОБОИ (CANVAS С ЧАСТИЦАМИ) =====
+        const canvas = document.getElementById('canvas-bg');
+        const ctx = canvas.getContext('2d');
+        let w, h;
+        let particles = [];
+        let mouseX = 0, mouseY = 0;
+        
+        function resize() {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * w;
+                this.y = Math.random() * h;
+                this.z = Math.random() * 0.8 + 0.2;
+                this.size = Math.random() * 3 + 0.5;
+                this.opacity = Math.random() * 0.5 + 0.05;
+                this.vx = (Math.random() - 0.5) * 0.3;
+                this.vy = (Math.random() - 0.5) * 0.3;
+                this.phase = Math.random() * Math.PI * 2;
+                this.phaseSpeed = Math.random() * 0.02 + 0.005;
+                this.orbit = Math.random() * Math.PI * 2;
+                this.orbitSpeed = Math.random() * 0.008 + 0.002;
+                this.orbitRadius = Math.random() * 60 + 20;
+                this.centerX = this.x;
+                this.centerY = this.y;
+                this.hue = 270 + Math.random() * 60;
+            }
+            update() {
+                const dx = mouseX - this.x;
+                const dy = mouseY - this.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < 200) {
+                    const force = (200 - dist) / 200 * 0.04;
+                    this.x += (dx / dist) * force;
+                    this.y += (dy / dist) * force;
+                }
+                this.phase += this.phaseSpeed;
+                this.orbit += this.orbitSpeed;
+                this.x += Math.sin(this.phase) * 0.15 + Math.cos(this.orbit) * 0.08;
+                this.y += Math.cos(this.phase) * 0.15 + Math.sin(this.orbit) * 0.08;
+                if (this.x < 0 || this.x > w) this.vx *= -1;
+                if (this.y < 0 || this.y > h) this.vy *= -1;
+                this.x += this.vx;
+                this.y += this.vy;
+            }
+            draw() {
+                const gradient = ctx.createRadialGradient(
+                    this.x, this.y, 0,
+                    this.x, this.y, this.size * 2
+                );
+                const color = theme === 'neon' ? '217, 0, 255' : '153, 0, 255';
+                gradient.addColorStop(0, `rgba(${color}, ${this.opacity * 0.8})`);
+                gradient.addColorStop(1, `rgba(${color}, 0)`);
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size * 2, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Ядро частицы
+                ctx.fillStyle = `rgba(${color}, ${this.opacity * 0.6})`;
+                ctx.shadowColor = `rgba(${color}, ${this.opacity * 0.3})`;
+                ctx.shadowBlur = this.size * 4;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size * 0.6, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            }
+        }
+
+        for(let i=0; i<300; i++) particles.push(new Particle());
+
+        let gridOffset = 0;
+        let time = 0;
+        
+        function animate() {
+            time += 0.01;
+            ctx.clearRect(0, 0, w, h);
+            
+            // Сетка
+            ctx.strokeStyle = theme === 'neon' 
+                ? `rgba(217, 0, 255, ${0.04 + Math.sin(time) * 0.015})` 
+                : `rgba(153, 0, 255, ${0.035 + Math.sin(time) * 0.01})`;
+            ctx.lineWidth = 0.5;
+            
+            gridOffset = (gridOffset + 0.2) % 50;
+            
+            for (let x = 0; x <= w; x += 80) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, h);
+                ctx.stroke();
+            }
+            
+            for (let y = gridOffset; y <= h; y += 40) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(w, y);
+                ctx.stroke();
+            }
+
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+
+            // Соединительные линии
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 120) {
+                        const alpha = 0.035 * (1 - dist / 120);
+                        ctx.strokeStyle = theme === 'neon' 
+                            ? `rgba(217, 0, 255, ${alpha})` 
+                            : `rgba(153, 0, 255, ${alpha})`;
+                        ctx.lineWidth = 0.4;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            // Дополнительные светящиеся пятна
+            for (let i = 0; i < 4; i++) {
+                const x = w * (0.15 + 0.35 * Math.sin(time * 0.15 + i * 1.8));
+                const y = h * (0.15 + 0.35 * Math.cos(time * 0.12 + i * 1.3));
+                const gradient = ctx.createRadialGradient(x, y, 0, x, y, 350);
+                const color = theme === 'neon' ? '217, 0, 255' : '153, 0, 255';
+                gradient.addColorStop(0, `rgba(${color}, ${0.025 + Math.sin(time + i) * 0.01})`);
+                gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(x - 350, y - 350, 700, 700);
+            }
+
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // ===== INIT =====
+        updateLanguage();
+        updatePrice();
+    </script>
 </body>
 </html>

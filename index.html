@@ -1,1 +1,278 @@
 
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мать Оникса — Кликер</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            background: #0b0b0b;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Impact', 'Arial Black', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: radial-gradient(circle at 30% 20%, #1f0505, #0a0a0a);
+            border: 6px solid #aa0000;
+            border-radius: 50px 10px 50px 10px;
+            padding: 40px 25px;
+            box-shadow: 0 0 80px rgba(200, 0, 0, 0.6), inset 0 0 40px #3d0000;
+            text-align: center;
+            transition: 0.2s;
+        }
+
+        h1 {
+            font-size: 3.8rem;
+            color: #ffcc00;
+            text-shadow: 0 0 30px #ff8800, 0 0 60px #ff2200, 0 5px 0 #6a2a00;
+            word-break: break-word;
+            line-height: 1.2;
+        }
+
+        .sub {
+            font-size: 2.2rem;
+            color: #ff4444;
+            text-shadow: 0 0 30px #ff0000, 0 0 70px #aa0000;
+            background: rgba(0,0,0,0.8);
+            padding: 10px 20px;
+            border-left: 6px solid #ffcc00;
+            border-right: 6px solid #ffcc00;
+            display: inline-block;
+            margin: 15px 0 25px;
+            letter-spacing: 6px;
+        }
+
+        .counter-box {
+            background: #1a0a0a;
+            border: 4px solid #cc3300;
+            border-radius: 100px;
+            padding: 20px 15px;
+            margin: 20px 0;
+            box-shadow: inset 0 0 60px #661100, 0 0 40px #cc3300;
+        }
+
+        .counter-label {
+            font-size: 1.8rem;
+            color: #ffaa55;
+            letter-spacing: 4px;
+        }
+
+        .counter-number {
+            font-size: 6rem;
+            font-weight: 900;
+            color: #ffdd44;
+            text-shadow: 0 0 40px #ff9900, 0 0 80px #ff3300;
+            line-height: 1.2;
+            font-family: 'Courier New', monospace;
+            background: #0f0500;
+            padding: 0 20px;
+            border-radius: 60px;
+            display: inline-block;
+            margin: 10px 0;
+            min-width: 200px;
+        }
+
+        .click-btn {
+            background: radial-gradient(circle at 30% 30%, #ff5500, #aa2200);
+            border: none;
+            border-bottom: 8px solid #661100;
+            color: #fff;
+            font-size: 3rem;
+            font-weight: bold;
+            text-shadow: 0 3px 0 #441100, 0 0 30px #ff8800;
+            padding: 25px 40px;
+            border-radius: 80px;
+            cursor: pointer;
+            transition: 0.08s linear;
+            width: 100%;
+            max-width: 450px;
+            margin: 15px auto;
+            text-transform: uppercase;
+            letter-spacing: 6px;
+            box-shadow: 0 0 60px #ff3300;
+        }
+
+        .click-btn:active {
+            transform: scale(0.94);
+            border-bottom-width: 3px;
+            background: radial-gradient(circle at 30% 30%, #ff3300, #881100);
+        }
+
+        .click-btn:hover {
+            box-shadow: 0 0 100px #ff5500, 0 0 200px #ff0000;
+        }
+
+        .juice-line {
+            font-size: 2rem;
+            color: #ff9933;
+            background: #1f0a00;
+            padding: 15px;
+            border-radius: 50px;
+            border: 2px solid #ff7700;
+            margin: 25px 0 15px;
+            letter-spacing: 4px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .tg-link {
+            display: inline-block;
+            background: #1f2a3a;
+            border: 3px solid #28a8ea;
+            border-radius: 60px;
+            padding: 18px 40px;
+            font-size: 2rem;
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            letter-spacing: 3px;
+            box-shadow: 0 0 40px #0088cc;
+            transition: 0.2s;
+            margin-top: 20px;
+            text-transform: none;
+        }
+
+        .tg-link:hover {
+            background: #28a8ea;
+            color: #0b0b0b;
+            box-shadow: 0 0 80px #00aaff, 0 0 150px #0066ff;
+            transform: scale(1.05);
+        }
+
+        .footer-meta {
+            margin-top: 35px;
+            font-size: 1.3rem;
+            color: #777;
+            border-top: 2px solid #440000;
+            padding-top: 20px;
+            font-family: Arial, sans-serif;
+            text-transform: none;
+            letter-spacing: 1px;
+        }
+
+        .footer-meta strong {
+            color: #ff5555;
+            text-shadow: 0 0 20px #ff0000;
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 2.8rem; }
+            .sub { font-size: 1.6rem; }
+            .counter-number { font-size: 4.2rem; }
+            .click-btn { font-size: 2.2rem; padding: 18px 20px; }
+            .tg-link { font-size: 1.5rem; padding: 14px 25px; }
+        }
+
+        /* анимация соков */
+        .splash {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+        .splash span {
+            font-size: 2.5rem;
+            filter: drop-shadow(0 0 20px #ff8800);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <h1>МАТЬ ОНИКСА</h1>
+    <div class="sub">ШЛЮХА</div>
+
+    <!-- Счётчик кликов -->
+    <div class="counter-box">
+        <div class="counter-label">⚡ РАЗ ЕБАЛИ ⚡</div>
+        <div class="counter-number" id="clickCounter">0</div>
+        <div style="font-size: 1.3rem; color: #cc8844; margin-top: 5px;">(нажми на кнопку, чтобы добавить)</div>
+    </div>
+
+    <!-- Кнопка кликера -->
+    <button class="click-btn" id="clickBtn">🍆 ЕБАТЬ</button>
+
+    <!-- Соковая тема -->
+    <div class="juice-line">
+        🧃 СОКИ-СОКИ-СОКИ 🧃
+    </div>
+    <div class="splash">
+        <span>🍊</span><span>🍋</span><span>🍇</span><span>🍓</span><span>🍉</span><span>🥤</span><span>🧃</span>
+    </div>
+
+    <!-- Твоя ссылка на Telegram -->
+    <a href="https://t.me/ianchik_exe" target="_blank" class="tg-link">
+        ✈️ T.me/ianchik_exe
+    </a>
+
+    <!-- Метка SWILL -->
+    <div class="footer-meta">
+        <strong>[SWILL-01-ACTIVE]</strong> &nbsp;|&nbsp; КЛИКЕР АКТИВЕН &nbsp;|&nbsp; 2025
+    </div>
+
+</div>
+
+<script>
+    (function() {
+        // Счётчик
+        let count = 0;
+        const counterEl = document.getElementById('clickCounter');
+        const btn = document.getElementById('clickBtn');
+
+        // Обновление отображения
+        function updateCounter() {
+            counterEl.textContent = count;
+            // лёгкий визуальный фидбек
+            counterEl.style.transform = 'scale(1.2)';
+            setTimeout(() => { counterEl.style.transform = 'scale(1)'; }, 120);
+        }
+
+        // Обработчик клика
+        btn.addEventListener('click', function(e) {
+            count++;
+            updateCounter();
+
+            // Эффект на кнопке (дополнительный сок)
+            btn.style.boxShadow = '0 0 120px #ffaa00, 0 0 200px #ff4400';
+            setTimeout(() => {
+                btn.style.boxShadow = '0 0 60px #ff3300';
+            }, 150);
+
+            // Можно добавить вибрацию при клике (если нужно)
+            // navigator.vibrate && navigator.vibrate(20);
+        });
+
+        // Сброс/старт с цифрой 0, но можно задать начальное значение
+        // Если хочешь стартовое число - поменяй count = 69; например
+        // count = 0; // по умолчанию
+
+        // Инициализация
+        updateCounter();
+
+        // Сохраняем в localStorage? (опционально)
+        // При загрузке можно восстановить:
+        // const saved = localStorage.getItem('onix_mom_counter');
+        // if (saved !== null) { count = parseInt(saved, 10) || 0; updateCounter(); }
+        // window.addEventListener('beforeunload', () => { localStorage.setItem('onix_mom_counter', count); });
+    })();
+</script>
+
+</body>
+</html>
